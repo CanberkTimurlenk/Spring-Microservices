@@ -1,0 +1,7 @@
+# Project exclude paths
+/BasketService/target/
+/DiscountService/target/
+/EurekaServer/target/
+/OrderService/target/
+/UserService/target/
+/WebMarket/target/
