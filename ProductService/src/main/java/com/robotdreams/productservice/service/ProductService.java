@@ -72,17 +72,10 @@ public class ProductService {
         return productRepository.findById(id).get();
     }
 
-    @Cacheable(value = "productByCategory", key = "#category")
     public List<ProductResponseDto> findByCategory(String category) {
 
         return productRepository.findByCategory(category).stream()
                 .map(mapper::productToProductResponseDto).toList();
     }
 
-    @CachePut(value = "productByCategory2", key = "#category")
-    public List<ProductResponseDto> productListByCategoryUpdate(String category) {
-
-        return productRepository.findByCategory(category).stream()
-                .map(mapper::productToProductResponseDto).toList();
-    }
 }

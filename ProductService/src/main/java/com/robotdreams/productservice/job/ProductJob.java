@@ -16,8 +16,8 @@ public class ProductJob {
 
     private final ProductService productService;
 
-    @Scheduled(fixedDelay = 10000)
-    public void updateProduct() {
-        productService.productListByCategoryUpdate(category);
-    }
+//    @Scheduled(fixedDelay = 10000)
+//    public void updateProduct() {
+//        productService.productListByCategoryUpdate(category);
+//    }
 }
