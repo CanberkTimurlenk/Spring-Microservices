@@ -12,6 +12,7 @@
         <option value="$PROJECT_DIR$/BasketService/pom.xml" />
         <option value="$PROJECT_DIR$/EurekaServer/pom.xml" />
         <option value="$PROJECT_DIR$/DiscountService/pom.xml" />
+        <option value="$PROJECT_DIR$/MobileMarket/pom.xml" />
       </list>
     </option>
   </component>
