@@ -22,10 +22,11 @@
         </processorPath>
         <module name="DiscountService" />
         <module name="MobileMarket" />
-        <module name="OrderService" />
         <module name="BasketService" />
-        <module name="basketservice" />
         <module name="ProductService" />
+        <module name="OrderService" />
+        <module name="PricingService" />
+        <module name="basketservice" />
       </profile>
       <profile name="Annotation profile for UserService" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -52,6 +53,7 @@
       <module name="EurekaServer" options="-parameters" />
       <module name="MobileMarket" options="-parameters" />
       <module name="OrderService" options="-parameters" />
+      <module name="PricingService" options="-parameters" />
       <module name="ProductService" options="-parameters" />
       <module name="UserService" options="-parameters" />
       <module name="WebMarket" options="-parameters" />

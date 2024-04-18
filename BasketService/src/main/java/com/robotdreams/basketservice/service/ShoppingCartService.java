@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -24,29 +26,42 @@ public class ShoppingCartService {
         return shoppingCartMapper.shoppingCartToShoppingCartResponseDto(shoppingCart);
     }
 
-    public Optional<ShoppingCartResponseDto> updateShoppingCart(ShoppingCartRequestDto requestDto) {
+    public Optional<ShoppingCartResponseDto> findById(long userId) {
+        Optional<ShoppingCart> shoppingCartOptional = shoppingCartRepository.findById(userId);
+        return shoppingCartOptional.map(shoppingCartMapper::shoppingCartToShoppingCartResponseDto);
+    }
 
-        if (shoppingCartRepository.existsById(requestDto.userId()))
-            return Optional.of(shoppingCartMapper.shoppingCartToShoppingCartResponseDto(
-                    shoppingCartRepository.save(shoppingCartMapper.shoppingCartRequestDtoToShoppingCart(requestDto))));
+    public List<ShoppingCartResponseDto> findAll() {
+        List<ShoppingCart> shoppingCarts = shoppingCartRepository.findAll();
+        return shoppingCarts.stream()
+                .map(shoppingCartMapper::shoppingCartToShoppingCartResponseDto).toList();
+    }
 
+    public boolean deleteById(long userId) {
+        if (shoppingCartRepository.existsById(userId)) {
+            shoppingCartRepository.deleteById(userId);
+            return true;
+        }
+        return false;
+    }
+
+    public long save(ShoppingCartRequestDto shoppingCartRequestDto) {
+        ShoppingCart shoppingCart = shoppingCartMapper.shoppingCartRequestDtoToShoppingCart(shoppingCartRequestDto);
+
+        shoppingCart.getItems()
+                .forEach(ci -> ci.setId(UUID.randomUUID().toString()));
+
+        return shoppingCartRepository.save(shoppingCart).getUserId();
+    }
+
+    public Optional<ShoppingCartResponseDto> update(long userId, ShoppingCartRequestDto shoppingCartRequestDto) {
+        if (shoppingCartRepository.existsById(userId)) {
+            ShoppingCart shoppingCart = shoppingCartMapper.shoppingCartRequestDtoToShoppingCart(shoppingCartRequestDto);
+            shoppingCart.setUserId(userId);
+
+            shoppingCartRepository.save(shoppingCart);
+            return Optional.of(shoppingCartMapper.shoppingCartToShoppingCartResponseDto(shoppingCart));
+        }
         return Optional.empty();
     }
-
-
-    public void save()
-    {
-        ShoppingCart shoppingCart = new ShoppingCart();
-        shoppingCart.setUserId(123);
-        shoppingCart.setDiscountCode("DISCOUNT123");
-        shoppingCart.setDiscountAmount(BigDecimal.TEN);
-        shoppingCart.setCartTotalAmount(BigDecimal.valueOf(100));
-
-        shoppingCartRepository.save(shoppingCart);
-
-
-
-    }
-
-
 }
