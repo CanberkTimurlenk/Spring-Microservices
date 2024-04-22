@@ -1,6 +1,6 @@
-package com.robotdreams.productservice.exceptionHandling;
+package com.robotdreams.pricingservice.exceptionHandling;
 
-public class GeneralException extends RuntimeException{
+public class GeneralException extends RuntimeException {
 
     public GeneralException() {
     }

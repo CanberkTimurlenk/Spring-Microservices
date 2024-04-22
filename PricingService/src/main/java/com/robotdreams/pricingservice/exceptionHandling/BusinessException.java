@@ -1,4 +1,4 @@
-package com.robotdreams.productservice.exceptionHandling;
+package com.robotdreams.pricingservice.exceptionHandling;
 
 import lombok.Getter;
 import lombok.Setter;

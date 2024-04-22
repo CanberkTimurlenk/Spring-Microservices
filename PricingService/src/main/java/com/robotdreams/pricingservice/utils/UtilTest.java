@@ -1,47 +1,75 @@
-package com.robotdreams.productservice.utils;
+package com.robotdreams.pricingservice.utils;
 
-import com.robotdreams.productservice.service.ProductService;
+import com.robotdreams.pricingservice.dto.cart.request.PricedCartItemRequestDto;
+import com.robotdreams.pricingservice.service.PricingService;
 import jakarta.annotation.PostConstruct;
 import lombok.Data;
+
+import java.util.Arrays;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.robotdreams.pricingservice.dto.cart.request.PricedCartRequestDto;
 
-import java.util.List;
+import java.math.BigDecimal;
+
 
 @Data
 @Service
 @RequiredArgsConstructor
 public class UtilTest {
 
-    private final ProductService productService;
+    private final PricingService pricingService;
+
 
     @PostConstruct
-    public void saveSampleData() {
+    public void Test() {
 
-        ProductDetailRequestDto phoneDetail = new ProductDetailRequestDto("6GB RAM", "123456789");
+        PricedCartItemRequestDto item1 = new PricedCartItemRequestDto(
+                1L, // productId
+                2, // quantity
+                BigDecimal.valueOf(10.0), // unitPrice
+                "DISCOUNT5" // discountCode
+        );
 
-        ProductRequestDto phone = ProductRequestDto.builder()
-                .name("Smartphone")
-                .category("Electronics")
-                .photoUrl("example.com/phone.jpg")
-                .description("This is a smartphone")
-                .price(499.99)
-                .productDetail(phoneDetail)
-                .build();
+        PricedCartItemRequestDto item2 = new PricedCartItemRequestDto(
+                2L, // productId
+                1, // quantity
+                BigDecimal.valueOf(15.0), // unitPrice
+                "NO_DISCOUNT" // discountCode
+        );
 
+        PricedCartItemRequestDto item3 = new PricedCartItemRequestDto(
+                3L, // productId
+                3, // quantity
+                BigDecimal.valueOf(8.0), // unitPrice
+                "DISCOUNT10" // discountCode
+        );
 
-        ProductDetailRequestDto computerDetail = new ProductDetailRequestDto("Intel Core i7", "987654321");
+        PricedCartItemRequestDto item4 = new PricedCartItemRequestDto(
+                4L, // productId
+                2, // quantity
+                BigDecimal.valueOf(30.0), // unitPrice
+                "DISCOUNT20" // discountCode
+        );
 
-        ProductRequestDto computer = ProductRequestDto.builder()
-                .name("Laptop")
-                .category("Electronics")
-                .photoUrl("example.com/laptop.jpg")
-                .description("This is a laptop")
-                .price(1299.99)
-                .productDetail(computerDetail)
-                .build();
+        PricedCartItemRequestDto item5 = new PricedCartItemRequestDto(
+                5L, // productId
+                4, // quantity
+                BigDecimal.valueOf(5.0), // unitPrice
+                "DISCOUNT15" // discountCode
+        );
 
-        productService.saveAll(List.of(phone, computer));
+        // PricedCartRequestDto örneği oluşturma
+        PricedCartRequestDto cartRequestDto = new PricedCartRequestDto(
+                12345L, // userId
+                Arrays.asList(item1, item2, item3, item4, item5), // cartItems
+                "NEWUSER10" // discountCode
+        );
+
+        var result = pricingService.getPricedCart(cartRequestDto);
+
+        int x =5 ;
     }
 
 }

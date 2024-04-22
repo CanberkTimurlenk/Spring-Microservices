@@ -1,11 +1,10 @@
-package com.robotdreams.productservice.configuration;
+package com.robotdreams.pricingservice.configuration;
 
-import org.springframework.cache.annotation.EnableCaching;
+//import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+//import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @Configuration
-@EnableDiscoveryClient
-@EnableCaching
+//@EnableDiscoveryClient
 public class GeneralConfiguration {
 }

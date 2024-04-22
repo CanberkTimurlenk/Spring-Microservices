@@ -2,12 +2,12 @@ package com.robotdreams.pricingservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.openfeign.EnableFeignClients;
+//import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
 @EnableAsync
-@EnableFeignClients
+//@EnableFeignClients
 public class PricingServiceApplication {
 
     public static void main(String[] args) {
