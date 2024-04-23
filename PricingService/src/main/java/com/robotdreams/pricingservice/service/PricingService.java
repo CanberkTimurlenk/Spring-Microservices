@@ -1,53 +1,53 @@
 package com.robotdreams.pricingservice.service;
 
-import com.robotdreams.pricingservice.dto.cart.request.PricedCartItemRequestDto;
-import com.robotdreams.pricingservice.dto.cart.request.PricedCartRequestDto;
-import com.robotdreams.pricingservice.dto.cart.response.PricedCartResponseDto;
+import com.robotdreams.pricingservice.dto.pricecontainer.request.CartContainerRequestDto;
+import com.robotdreams.pricingservice.dto.pricecontainer.response.PriceContainerResponseDto;
 import com.robotdreams.pricingservice.dto.user.UserResponseDto;
-import com.robotdreams.pricingservice.entity.Cart;
-import com.robotdreams.pricingservice.entity.CartItem;
-//import com.robotdreams.pricingservice.feign.UserFeignClient;
-import com.robotdreams.pricingservice.service.mapper.CartItemMapper;
-import com.robotdreams.pricingservice.service.mapper.CartMapper;
+import com.robotdreams.pricingservice.entity.PriceContainer;
+import com.robotdreams.pricingservice.entity.ContainerItem;
+import com.robotdreams.usergrpcservice.UserResponse;
+import com.robotdreams.pricingservice.grpc.UserGrpcClientService;
+import com.robotdreams.pricingservice.service.mapper.PriceContainerMapper;
+
 
 import lombok.RequiredArgsConstructor;
+import net.devh.boot.grpc.client.inject.GrpcClient;
+import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class PricingService {
 
-    //    private final UserFeignClient userFeignClient;
-    private final CartMapper cartMapper;
-    private final CartItemMapper cartItemMapper;
+    private final UserGrpcClientService userGrpcClientService;
+    private final PriceContainerMapper priceContainerMapper;
 
-    public PricedCartResponseDto getPricedCart(PricedCartRequestDto pricedCardRequestDto) {
+    public PriceContainerResponseDto getPricedCart(CartContainerRequestDto pricedCardRequestDto) {
 
-        //UserResponseDto userResponseDto = userFeignClient.findUserById(pricedCardRequestDto.userId());
+        UserResponse userResponse = userGrpcClientService.getUserResponseDto(pricedCardRequestDto.userId());
 
-        List<CartItem> cartItemList = new ArrayList<>();
+        PriceContainer priceContainer = getCart(pricedCardRequestDto, userResponse);
 
-        for (PricedCartItemRequestDto cartItem : pricedCardRequestDto.cartItems()) {
+        return priceContainerMapper.toPriceContainerResponseDto(priceContainer);
+    }
 
-            cartItemList.add(CartItem.builder()
-                    .productId(cartItem.productId())
-                    .unitPrice(cartItem.unitPrice())
-                    .discountCode(cartItem.discountCode())
-                    .quantity(cartItem.quantity())
-                    .build());
-        }
+    public PriceContainer getCart(CartContainerRequestDto pricedCardRequestDto, UserResponse userResponse) {
+        List<ContainerItem> priceContainerItems = pricedCardRequestDto.containerItems().stream()
+                .map(priceContainerItem -> ContainerItem.builder()
+                        .productId(priceContainerItem.productId())
+                        .unitPrice(priceContainerItem.unitPrice())
+                        .discountCode(priceContainerItem.discountCode())
+                        .quantity(priceContainerItem.quantity())
+                        .build())
+                .toList();
 
-        Cart cart = Cart.builder()
+        return PriceContainer.builder()
                 .userId(pricedCardRequestDto.userId())
-                .cartItems(cartItemList)
-//                .isPremiumCart(userResponseDto.premium())
-                .isPremiumCart(false)
+                .containerItems(priceContainerItems)
+                .isPremiumCart(userResponse.getPremium())
                 .discountCode(pricedCardRequestDto.discountCode())
                 .build();
-
-        return cartMapper.toPricedCartResponseDto(cart);
     }
 }

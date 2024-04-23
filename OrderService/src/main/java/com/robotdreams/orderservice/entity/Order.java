@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Table(name = "Orders")
@@ -23,4 +24,5 @@ public class Order extends BaseEntity implements Serializable {
     private double shippingCost;
 
     private long userId;
+    private BigDecimal price;
 }

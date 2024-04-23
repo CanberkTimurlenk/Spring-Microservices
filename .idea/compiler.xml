@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="EurekaServer" />
         <module name="WebMarket" />
+        <module name="Common" />
       </profile>
       <profile name="Annotation profile for ProductService" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -22,11 +23,10 @@
         </processorPath>
         <module name="DiscountService" />
         <module name="MobileMarket" />
-        <module name="BasketService" />
-        <module name="ProductService" />
         <module name="OrderService" />
-        <module name="PricingService" />
+        <module name="BasketService" />
         <module name="basketservice" />
+        <module name="ProductService" />
       </profile>
       <profile name="Annotation profile for UserService" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -43,12 +43,14 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok-mapstruct-binding/0.2.0/lombok-mapstruct-binding-0.2.0.jar" />
         </processorPath>
         <module name="UserService" />
+        <module name="PricingService" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="BasketService" options="-parameters" />
+      <module name="Common" options="" />
       <module name="DiscountService" options="-parameters" />
       <module name="EurekaServer" options="-parameters" />
       <module name="MobileMarket" options="-parameters" />
