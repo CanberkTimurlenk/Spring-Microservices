@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserGrpcClientService {
 
-    @GrpcClient("UserService")
+    @GrpcClient("cloud-grpc-server")
     private UserServiceGrpc.UserServiceBlockingStub userServiceBlockingStub;
 
     public UserResponse getUserResponseDto(long userId) {

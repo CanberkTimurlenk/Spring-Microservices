@@ -10,6 +10,8 @@ import com.robotdreams.userservice.service.sms.HappySmsStrategy;
 import com.robotdreams.userservice.service.sms.SmsSender;
 import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder;
 import lombok.RequiredArgsConstructor;
+//import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder;
+//import net.devh.boot.grpc.server.serverfactory.GrpcServerConfigurer;
 import net.devh.boot.grpc.server.serverfactory.GrpcServerConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
@@ -68,16 +70,4 @@ public class UserService {
 
         return user.stream().map(userMapper::userToUserResponseDto).toList();
     }
-
-    @Bean
-    public GrpcServerConfigurer keepAliveServerConfigurer() {
-        return serverBuilder -> {
-            if (serverBuilder instanceof NettyServerBuilder)
-                ((NettyServerBuilder) serverBuilder).keepAliveTime(30, TimeUnit.SECONDS)
-                        .keepAliveTimeout(5, TimeUnit.SECONDS)
-                        .permitKeepAliveWithoutCalls(true);
-
-        };
-    }
-
 }

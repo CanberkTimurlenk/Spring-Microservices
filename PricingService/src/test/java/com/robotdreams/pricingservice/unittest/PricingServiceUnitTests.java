@@ -1,7 +1,7 @@
 package com.robotdreams.pricingservice.unittest;
 
 import com.robotdreams.pricingservice.dto.pricecontainer.request.ContainerItemRequestDto;
-import com.robotdreams.pricingservice.dto.pricecontainer.request.CartContainerRequestDto;
+import com.robotdreams.pricingservice.dto.pricecontainer.request.PriceContainerRequestDto;
 import com.robotdreams.pricingservice.entity.PriceContainer;
 import com.robotdreams.pricingservice.service.PricingService;
 import com.robotdreams.usergrpcservice.UserResponse;
@@ -52,7 +52,7 @@ public class PricingServiceUnitTests {
         List<ContainerItemRequestDto> containerItems = Arrays.asList(item1, item2, item3);
 
         //cart
-        CartContainerRequestDto cart = Mockito.mock(CartContainerRequestDto.class);
+        PriceContainerRequestDto cart = Mockito.mock(PriceContainerRequestDto.class);
 
         //cart
         Mockito.when(cart.userId()).thenReturn(123456L);
@@ -98,7 +98,7 @@ public class PricingServiceUnitTests {
         List<ContainerItemRequestDto> containerItems = Arrays.asList(item1, item2, item3);
 
         //cart
-        CartContainerRequestDto cart = Mockito.mock(CartContainerRequestDto.class);
+        PriceContainerRequestDto cart = Mockito.mock(PriceContainerRequestDto.class);
 
         //cart
         Mockito.when(cart.userId()).thenReturn(123456L);
