@@ -2,12 +2,11 @@ package com.robotdreams.pricingservice.service;
 
 import com.robotdreams.pricingservice.dto.pricecontainer.request.PriceContainerRequestDto;
 import com.robotdreams.pricingservice.dto.pricecontainer.response.PriceContainerResponseDto;
+import com.robotdreams.pricingservice.dto.user.UserResponseDto;
 import com.robotdreams.pricingservice.entity.PriceContainer;
 import com.robotdreams.pricingservice.entity.ContainerItem;
-import com.robotdreams.usergrpcservice.UserResponse;
-import com.robotdreams.pricingservice.grpc.UserGrpcClientService;
+import com.robotdreams.pricingservice.feign.UserFeignClient;
 import com.robotdreams.pricingservice.service.mapper.PriceContainerMapper;
-
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,19 +17,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PricingService {
 
-    private final UserGrpcClientService userGrpcClientService;
+    private final UserFeignClient userFeignClient;
     private final PriceContainerMapper priceContainerMapper;
 
     public PriceContainerResponseDto getPricedCart(PriceContainerRequestDto priceContainerRequestDto) {
 
-        UserResponse userResponse = userGrpcClientService.getUserResponseDto(priceContainerRequestDto.userId());
+        UserResponseDto userResponseDto = userFeignClient.findUserById(priceContainerRequestDto.userId());
 
-        PriceContainer priceContainer = getCart(priceContainerRequestDto, userResponse);
+        PriceContainer priceContainer = getCart(priceContainerRequestDto, userResponseDto);
 
         return priceContainerMapper.toPriceContainerResponseDto(priceContainer);
     }
 
-    public PriceContainer getCart(PriceContainerRequestDto priceContainerRequestDto, UserResponse userResponse) {
+    public PriceContainer getCart(PriceContainerRequestDto priceContainerRequestDto, UserResponseDto userResponseDto) {
         List<ContainerItem> priceContainerItems = priceContainerRequestDto.containerItems().stream()
                 .map(priceContainerItem -> ContainerItem.builder()
                         .productId(priceContainerItem.productId())
@@ -43,7 +42,7 @@ public class PricingService {
         return PriceContainer.builder()
                 .userId(priceContainerRequestDto.userId())
                 .containerItems(priceContainerItems)
-                .isPremiumCart(userResponse.getPremium())
+                .isPremiumCart(userResponseDto.premium())
                 .discountCode(priceContainerRequestDto.discountCode())
                 .build();
     }

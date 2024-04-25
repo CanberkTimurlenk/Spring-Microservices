@@ -9,7 +9,6 @@
         <outputRelativeToContentRoot value="true" />
         <module name="EurekaServer" />
         <module name="WebMarket" />
-        <module name="Common" />
       </profile>
       <profile name="Annotation profile for UserService" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -31,6 +30,9 @@
         <module name="basketservice" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Common" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
