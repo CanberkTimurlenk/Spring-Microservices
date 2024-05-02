@@ -1,4 +1,4 @@
-package com.laba.mobilemarket.dto.product;
+package com.laba.mobilemarket.product.dto;
 
 import java.io.Serializable;
 

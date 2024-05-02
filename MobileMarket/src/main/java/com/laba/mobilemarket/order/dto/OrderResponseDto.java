@@ -1,6 +1,5 @@
-package com.robotdreams.orderservice.dto.response.internal;
+package com.laba.mobilemarket.order.dto;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
