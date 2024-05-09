@@ -35,7 +35,7 @@ public class ProductService {
 
     public boolean saveAll(List<ProductRequestDto> createProductRequestDtos) {
 
-        createProductRequestDtos.stream().forEach(p -> {
+        createProductRequestDtos.forEach(p -> {
             try {
                 checkIfPriceIsValid(p.price());
             } catch (ProductException e) {
@@ -76,6 +76,10 @@ public class ProductService {
 
         return productRepository.findByCategory(category).stream()
                 .map(mapper::productToProductResponseDto).toList();
+    }
+
+    public Boolean checkIfProductIsValid(long productId) {
+        return productRepository.existsById(productId);
     }
 
 }

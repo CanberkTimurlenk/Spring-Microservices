@@ -64,4 +64,8 @@ public class UserService {
 
         return user.stream().map(userMapper::userToUserResponseDto).toList();
     }
+
+    public Boolean checkIfUserIsValid(long userId) {
+        return userRepository.existsById(userId);
+    }
 }

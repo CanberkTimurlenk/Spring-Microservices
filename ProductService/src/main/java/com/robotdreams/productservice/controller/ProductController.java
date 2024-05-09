@@ -5,7 +5,6 @@ import com.robotdreams.productservice.dto.ProductRequestDto;
 import com.robotdreams.productservice.dto.ProductResponseDto;
 import com.robotdreams.productservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,5 +42,13 @@ public class ProductController {
         return new ResponseEntity<>(productResponseDtos, HttpStatus.OK);
     }
 
+    @GetMapping("/productValidity")
+    public ResponseEntity<Boolean> checkIfProductIsValid(long productId) {
+
+        if (productService.checkIfProductIsValid(productId))
+            return ResponseEntity.ok().build();
+
+        return ResponseEntity.notFound().build();
+    }
 
 }

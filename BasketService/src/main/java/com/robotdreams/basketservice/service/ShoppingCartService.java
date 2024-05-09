@@ -3,6 +3,7 @@ package com.robotdreams.basketservice.service;
 import com.robotdreams.basketservice.dto.ShoppingCartRequestDto;
 import com.robotdreams.basketservice.dto.ShoppingCartResponseDto;
 import com.robotdreams.basketservice.entity.ShoppingCart;
+import com.robotdreams.basketservice.feign.UserFeignClient;
 import com.robotdreams.basketservice.repository.ShoppingCartRepository;
 import com.robotdreams.basketservice.service.mapper.ShoppingCartMapper;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class ShoppingCartService {
 
     private final ShoppingCartRepository shoppingCartRepository;
     private final ShoppingCartMapper shoppingCartMapper;
+    private final UserFeignClient userFeignClient;
 
     public ShoppingCartResponseDto findShoppingCartByUserId(long userId) {
 
@@ -46,6 +48,8 @@ public class ShoppingCartService {
     }
 
     public long save(ShoppingCartRequestDto shoppingCartRequestDto) {
+
+
         ShoppingCart shoppingCart = shoppingCartMapper.shoppingCartRequestDtoToShoppingCart(shoppingCartRequestDto);
 
         shoppingCart.getItems()

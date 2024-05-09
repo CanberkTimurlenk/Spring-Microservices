@@ -47,7 +47,15 @@ public class UserController {
 
         return user.map(userResponseDto -> new ResponseEntity<>(userResponseDto, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 
+    @GetMapping("/userValidity")
+    public ResponseEntity<Boolean> checkIfUserIsValid(long userId) {
+
+        if (userService.checkIfUserIsValid(userId))
+            return ResponseEntity.ok().build();
+
+        return ResponseEntity.notFound().build();
     }
 
 }

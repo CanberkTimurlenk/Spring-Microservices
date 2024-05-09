@@ -68,8 +68,43 @@ public class OrderService {
         // persist orderProducts
         orderProductService.saveAll(products, order);
 
-
         new SmsSender(new HappySmsStrategy()).sendOrderCreatedSms(order, user);
+    }
+
+
+    public Optional<List<OrderResponseDto>> findAll() {
+
+        List<OrderResponseDto> orderResponseDtos =
+                orderRepository.findAll().stream().map(mapper::orderToOrderResponseDto).toList();
+
+        return Optional.of(orderResponseDtos);
+    }
+
+    public void delete(long orderId) {
+        orderRepository.deleteById(orderId);
+    }
+
+    private void checkIfOrderHasMoreThanThreeProductsInSameCategory(List<ProductResponseDto> products)
+            throws OrderException {
+
+        // Business kuralı: bir sipariş aynı kategoriden en fazla üç ürün içerebilir
+
+        Map<String, Long> categoryProductCount = products.stream()
+                .collect(Collectors.groupingBy(ProductResponseDto::category, Collectors.counting()));
+
+        StringBuilder message = new StringBuilder();
+
+        // üçten fazla aynı kategoriden olan ürün varsa isimlerini bir string içerisinde topluyorum
+        categoryProductCount.forEach((category, count) -> {
+            if (count > 3)
+                message.append(category)
+                        .append(" : ")
+                        .append(count)
+                        .append(" ");
+        });
+
+        if (!message.isEmpty())
+            throw new OrderException(("An order must include a maximum of 3 products from a single category. Violations: " + message).trim());
     }
 
     private double getShippingOffer(List<ProductResponseDto> products, UserInfoResponseDto user) {
@@ -96,7 +131,7 @@ public class OrderService {
         return new ShippingCostCalculator(new MngShippingStrategy()).getCost(totalWeight);
     }
 
-    public void checkIfOrderAmountIsSufficent(List<ProductResponseDto> products)
+    private void checkIfOrderAmountIsSufficent(List<ProductResponseDto> products)
             throws OrderException {
 
         double minOrderAmount = 50.0;
@@ -107,40 +142,5 @@ public class OrderService {
 
         if (minOrderAmount > total)
             throw new OrderException("The order amount of " + total + " is lower than the minimum order amount.");
-    }
-
-    public void checkIfOrderHasMoreThanThreeProductsInSameCategory(List<ProductResponseDto> products)
-            throws OrderException {
-
-        // Business kuralı: bir sipariş aynı kategoriden en fazla üç ürün içerebilir
-
-        Map<String, Long> categoryProductCount = products.stream()
-                .collect(Collectors.groupingBy(ProductResponseDto::category, Collectors.counting()));
-
-        StringBuilder message = new StringBuilder();
-
-        // üçten fazla aynı kategoriden olan ürün varsa isimlerini bir string içerisinde topluyorum
-        categoryProductCount.forEach((category, count) -> {
-            if (count > 3)
-                message.append(category)
-                        .append(" : ")
-                        .append(count)
-                        .append(" ");
-        });
-
-        if (!message.isEmpty())
-            throw new OrderException(("An order must include a maximum of 3 products from a single category. Violations: " + message).trim());
-    }
-
-    public Optional<List<OrderResponseDto>> findAll() {
-
-        List<OrderResponseDto> orderResponseDtos =
-                orderRepository.findAll().stream().map(mapper::orderToOrderResponseDto).toList();
-
-        return Optional.of(orderResponseDtos);
-    }
-
-    public void delete(long orderId) {
-        orderRepository.deleteById(orderId);
     }
 }

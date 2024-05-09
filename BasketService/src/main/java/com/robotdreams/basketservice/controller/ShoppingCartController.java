@@ -43,7 +43,7 @@ public class ShoppingCartController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(ShoppingCartRequestDto shoppingCartRequestDto)
+    public ResponseEntity<Void> save(@RequestBody ShoppingCartRequestDto shoppingCartRequestDto)
             throws URISyntaxException {
 
         long userId = shoppingCartService.save(shoppingCartRequestDto);
