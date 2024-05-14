@@ -40,16 +40,15 @@ public class CouponService {
 
     public Optional<CouponResponseDto> update(long couponId, CouponRequestDto couponRequestDto) {
 
-        // such a coupon does not exist
-        if (!couponRepository.existsById(couponId))
-            return Optional.empty();
+        var couponToUpdate = couponRepository.findById(couponId);
 
-        Coupon coupon = couponMapper.updateCoupon(new Coupon(), couponRequestDto);
-        coupon.setId(couponId);
-
-        couponRepository.save(coupon);
-
-        return Optional.of(couponMapper.couponToCouponResponseDto(coupon));
+        if (couponToUpdate.isPresent()) {
+            Coupon coupon = couponToUpdate.get();
+            couponMapper.updateCoupon(coupon, couponRequestDto);
+            couponRepository.save(coupon);
+            return Optional.of(couponMapper.couponToCouponResponseDto(coupon));
+        }
+        return Optional.empty();
     }
 
     public Optional<CouponResponseDto> findById(long couponId) {
