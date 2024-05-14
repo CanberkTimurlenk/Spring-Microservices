@@ -18,10 +18,14 @@ public class CouponService {
 
     private final CouponRepository couponRepository;
     private final CouponMapper couponMapper;
+    private final SequenceGeneratorService sequenceGenerator;
 
-    public long save(CouponRequestDto couponRequestDto) {
+
+
+    public Long save(CouponRequestDto couponRequestDto) {
 
         Coupon coupon = couponMapper.couponRequestDtoToCoupon(couponRequestDto);
+        coupon.setId(sequenceGenerator.generateSequence(Coupon.SEQUENCE_NAME));
         return couponRepository.save(coupon).getId();
     }
 

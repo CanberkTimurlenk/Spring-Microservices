@@ -43,7 +43,7 @@ public class CouponController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(CouponRequestDto couponRequestDto)
+    public ResponseEntity<Void> save(@RequestBody CouponRequestDto couponRequestDto)
             throws URISyntaxException {
 
         long id = couponService.save(couponRequestDto);
