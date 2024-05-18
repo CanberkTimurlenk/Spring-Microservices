@@ -1,21 +1,20 @@
 package com.robotdreams.discountservice.entity;
 
+import com.robotdreams.discountservice.exceptionHandling.BusinessException;
+import com.robotdreams.discountservice.exceptionHandling.InvalidAmountException;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.*;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.Version;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Getter
 @Setter
-@Document
-public class Coupon implements Serializable {
-
-    @Transient
-    public static final String SEQUENCE_NAME = "users_sequence";
+public abstract class Coupon {
 
     @Version
     private Long version;
@@ -26,9 +25,26 @@ public class Coupon implements Serializable {
     private Date createDate;
     @LastModifiedDate
     private Date updateDate;
-    private long productId;
     private String description;
-    private BigDecimal Amount;
+    private BigDecimal amount;
     private String couponCode;
+    private Date expirationDate;
 
+    public void setAmount(BigDecimal amount) throws InvalidAmountException {
+
+        if (amount.compareTo(new BigDecimal("100")) > 0
+                || amount.compareTo(new BigDecimal("0")) < 0) {
+
+            throw new InvalidAmountException("Invalid amount was entered. The amount must be interval in % 0-100");
+        }
+        this.amount = amount;
+    }
+
+    public void setExpirationDate(Date date)
+    {
+        if(date.before(new Date()))
+            throw new BusinessException("The expiration date must be later than present");
+
+        this.expirationDate = date;
+    }
 }

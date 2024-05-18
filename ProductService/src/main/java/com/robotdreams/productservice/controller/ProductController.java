@@ -33,7 +33,6 @@ public class ProductController {
         return new ResponseEntity<>(productResponseDtos, HttpStatus.OK);
     }
 
-
     @GetMapping("/byCategory")
     public ResponseEntity<List<ProductResponseDto>> findByCategory(@RequestParam String category) {
 
@@ -42,8 +41,8 @@ public class ProductController {
         return new ResponseEntity<>(productResponseDtos, HttpStatus.OK);
     }
 
-    @GetMapping("/productValidity")
-    public ResponseEntity<Boolean> checkIfProductIsValid(long productId) {
+    @GetMapping("/productExists")
+    public ResponseEntity<Boolean> checkIfProductExists(long productId) {
 
         if (productService.checkIfProductIsValid(productId))
             return ResponseEntity.ok().build();
