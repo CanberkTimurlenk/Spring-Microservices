@@ -48,7 +48,7 @@ public class ShoppingCartController {
 
         long userId = shoppingCartService.save(shoppingCartRequestDto);
 
-        return ResponseEntity.created(new URI("/coupons" + userId)).build();
+        return ResponseEntity.created(new URI("/shopping-carts/" + userId)).build();
     }
 
     @PutMapping("/{userId}")

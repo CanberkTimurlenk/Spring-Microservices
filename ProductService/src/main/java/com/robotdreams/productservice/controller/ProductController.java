@@ -41,11 +41,11 @@ public class ProductController {
         return new ResponseEntity<>(productResponseDtos, HttpStatus.OK);
     }
 
-    @GetMapping("/productExists")
-    public ResponseEntity<Boolean> checkIfProductExists(long productId) {
+    @GetMapping("/productExists/{productId}")
+    public ResponseEntity<Boolean> checkIfProductExists(@PathVariable long productId) {
 
         if (productService.checkIfProductIsValid(productId))
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(true);
 
         return ResponseEntity.notFound().build();
     }

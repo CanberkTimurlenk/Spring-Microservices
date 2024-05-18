@@ -21,11 +21,11 @@ public class ProductCouponService {
     private final ProductCouponRepository productCouponRepository;
     private final ProductCouponMapper productCouponMapper;
     private final SequenceGeneratorService sequenceGenerator;
-    private final ProductFeignClient productFeignClient;
+    private final ProductFeignClient productClient;
 
     public Long save(ProductCouponRequestDto productCouponRequestDto) {
 
-        var productExists = productFeignClient.checkIfProductExists(productCouponRequestDto.productId()).getBody();
+        var productExists = productClient.checkIfProductExists(productCouponRequestDto.productId());
 
         if (productExists == null || !productExists)
             throw new BusinessException("A product does not exist for id: " + productCouponRequestDto.productId());
