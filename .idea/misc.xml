@@ -15,6 +15,8 @@
         <option value="$PROJECT_DIR$/MobileMarket/pom.xml" />
         <option value="$PROJECT_DIR$/PricingService/pom.xml" />
         <option value="$PROJECT_DIR$/Common/pom.xml" />
+        <option value="$PROJECT_DIR$/InventoryService/pom.xml" />
+        <option value="$PROJECT_DIR$/ShipmentService/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

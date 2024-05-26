@@ -1,8 +1,8 @@
-package com.robotdreams.pricingservice.service.mapper;
+package com.microservices.pricingservice.service.mapper;
 
-import com.robotdreams.pricingservice.dto.pricecontainer.response.ContainerItemResponseDto;
-import com.robotdreams.pricingservice.dto.pricecontainer.response.PriceContainerResponseDto;
-import com.robotdreams.pricingservice.entity.PriceContainer;
+import com.microservices.pricingservice.dto.pricecontainer.response.ContainerItemResponseDto;
+import com.microservices.pricingservice.dto.pricecontainer.response.PriceContainerResponseDto;
+import com.microservices.pricingservice.entity.PriceContainer;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.annotation.processing.Generated;

@@ -6,10 +6,12 @@
     <file url="file://$PROJECT_DIR$/Common/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/DiscountService/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/EurekaServer/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/InventoryService/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/MobileMarket/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/OrderService/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/PricingService/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ProductService/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ShipmentService/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/UserService/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/WebMarket/src/main/java" charset="UTF-8" />
   </component>

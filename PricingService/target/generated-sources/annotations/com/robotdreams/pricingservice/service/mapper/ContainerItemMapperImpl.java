@@ -1,7 +1,7 @@
-package com.robotdreams.pricingservice.service.mapper;
+package com.microservices.pricingservice.service.mapper;
 
-import com.robotdreams.pricingservice.dto.pricecontainer.response.ContainerItemResponseDto;
-import com.robotdreams.pricingservice.entity.ContainerItem;
+import com.microservices.pricingservice.dto.pricecontainer.response.ContainerItemResponseDto;
+import com.microservices.pricingservice.entity.ContainerItem;
 import java.math.BigDecimal;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
