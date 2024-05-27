@@ -5,3 +5,7 @@
 /OrderService/target/
 /UserService/target/
 /WebMarket/target/
+/InventoryService/target/
+/ShipmentService/target/
+/ProductService/target/
+/.idea/
