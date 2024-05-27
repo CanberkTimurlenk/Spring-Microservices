@@ -8,4 +8,6 @@
 /InventoryService/target/
 /ShipmentService/target/
 /ProductService/target/
-/.idea/
+/MobileMarket/target/
+/WebMarket/target
+/.idea
