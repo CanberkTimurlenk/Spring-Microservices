@@ -14,7 +14,7 @@ import java.util.Set;
 @Setter
 public class Order extends BaseEntity implements Serializable {
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE)
     private Set<OrderProduct> orderProducts;
 
     private String orderNumber;

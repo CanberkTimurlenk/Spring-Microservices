@@ -4,6 +4,7 @@ import com.microservices.orderservice.dto.request.OrderRequestDto;
 import com.microservices.orderservice.dto.response.internal.OrderResponseDto;
 import com.microservices.orderservice.entity.Order;
 import com.microservices.orderservice.entity.OrderProduct;
+import com.microservices.orderservice.event.OrderCreatedEvent;
 import com.microservices.orderservice.event.Product;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
@@ -29,4 +30,8 @@ public interface OrderMapper {
                 .map(op -> new Product(op.getProductId(), op.getQuantity(), op.getPrice()))
                 .collect(Collectors.toSet());
     }
+
+    @Mapping(target = "orderId", source = "id")
+    @Mapping(target = "products", source = "orderProducts", qualifiedByName = "mapToProduct")
+    OrderCreatedEvent toOrderCreatedEvent(Order order);
 }

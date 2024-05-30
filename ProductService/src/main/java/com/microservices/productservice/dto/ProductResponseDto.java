@@ -1,4 +1,4 @@
 package com.microservices.productservice.dto;
 
-public record ProductResponseDto(String name, String category, String photoUrl, String price) {
+public record ProductResponseDto(Long id, String name, String category, String photoUrl, String price) {
 }

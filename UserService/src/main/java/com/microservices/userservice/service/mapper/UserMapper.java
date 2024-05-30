@@ -14,4 +14,6 @@ public interface UserMapper {
     User updateUser(@MappingTarget User user, UserRequestDto dto);
 
     UserResponseDto userToUserResponseDto(User user);
+
+
 }

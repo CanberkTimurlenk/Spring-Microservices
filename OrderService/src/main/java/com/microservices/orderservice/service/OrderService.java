@@ -11,10 +11,9 @@ import com.microservices.orderservice.feign.ProductFeignClient;
 import com.microservices.orderservice.feign.UserFeignClient;
 import com.microservices.orderservice.repository.OrderRepository;
 import com.microservices.orderservice.service.constant.ShippingConstants;
+import com.microservices.orderservice.service.kafka.producer.OrderProducer;
 import com.microservices.orderservice.service.mapper.OrderMapper;
 import com.microservices.orderservice.service.shipping.*;
-import com.microservices.orderservice.service.sms.HappySmsStrategy;
-import com.microservices.orderservice.service.sms.SmsSender;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +34,8 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
     private final OrderProductService orderProductService;
-    private final UserFeignClient userClient;
     private final ProductFeignClient productClient;
+    private final OrderProducer orderProducer;
 
     public void save(OrderRequestDto orderRequestDto) {
 
@@ -46,7 +45,8 @@ public class OrderService {
         Order order = orderMapper.toOrder(orderRequestDto);
 
         // find user with ID
-        UserInfoResponseDto user = userClient.getInfo(orderRequestDto.userId());
+        // TODO: This line was commented out for test purposes
+        //UserInfoResponseDto user = userClient.getInfo(orderRequestDto.userId());
 
         // create order number
         order.setOrderNumber(UUID.randomUUID().toString());
@@ -55,7 +55,8 @@ public class OrderService {
         List<ProductResponseDto> products = productClient.getProductsById(productIds);
 
         // set shipment cost
-        order.setShippingCost(getShippingOffer(products, user));
+        // TODO: This line was commented out for test purposes
+        //order.setShippingCost(getShippingOffer(products, user));
 
         // persist order
         orderRepository.save(order);
@@ -71,7 +72,9 @@ public class OrderService {
         // persist orderProducts
         orderProductService.saveAll(products, order);
 
-        new SmsSender(new HappySmsStrategy()).sendOrderCreatedSms(order, user);
+        orderProducer.sendOrderCreatedEventToKafka(orderMapper.toOrderCreatedEvent(order));
+
+        // SmsSender(new HappySmsStrategy()).sendOrderCreatedSms(order, user);
     }
 
 

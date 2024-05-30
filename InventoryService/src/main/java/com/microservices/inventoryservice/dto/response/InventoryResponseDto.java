@@ -5,7 +5,7 @@ import java.util.Date;
 public record InventoryResponseDto(
         long id,
         long productId,
-        long inventoryAmount,
+        long stockAmount,
         Date createDate,
         Date updatedDate) {
 }

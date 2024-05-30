@@ -20,7 +20,7 @@ public class Inventory {
     @Id
     private long id;
     private long productId;
-    private long inventoryAmount;
+    private long stockAmount;
     @CreationTimestamp
     private Date createDate;
     @UpdateTimestamp
