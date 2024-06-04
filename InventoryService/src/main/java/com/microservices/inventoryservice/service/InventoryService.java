@@ -67,7 +67,7 @@ public class InventoryService {
                 .map(inventoryMapper::toInventoryResponseDto).toList();
     }
 
-    public void stockDecrement(List<StockDecrementDto> stockDecrementDto) {
+    public List<InventoryProduct> stockDecrement(List<StockDecrementDto> stockDecrementDto) {
 
         // Initialize an empty hashset to create StockUpdatedEvent
         List<InventoryProduct> inventoryProductSet = new ArrayList<>();
@@ -94,6 +94,8 @@ public class InventoryService {
                 throw new GeneralException("Insufficient stock for product Id: "
                         + sd.productId());
         });
+
+        return inventoryProductSet;
 
         var event = new StockUpdatedEvent(inventoryProductSet, new Date());
         inventoryProducer.sendStockUpdatedEventToKafka(event);

@@ -3,8 +3,10 @@ package com.microservices.shipmentservice.service.mapper;
 import com.microservices.shipmentservice.dto.request.ShipmentRequestDto;
 import com.microservices.shipmentservice.dto.response.ShipmentResponseDto;
 import com.microservices.shipmentservice.entity.Shipment;
+import com.microservices.shipmentservice.event.shipmentprocessed.ShipmentProcessedEvent;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
@@ -15,5 +17,8 @@ public interface ShipmentMapper {
     ShipmentResponseDto toShipmentResponseDto(Shipment shipment);
 
     Shipment updateShipment(@MappingTarget Shipment shipment, ShipmentRequestDto shipmentRequestDto);
+
+    @Mapping(source = "productShipments", target = "processedProductShipments")
+    ShipmentProcessedEvent toShipmentProcessedEvent(ShipmentResponseDto shipmentResponseDto);
 
 }

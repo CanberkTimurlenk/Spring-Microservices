@@ -7,6 +7,7 @@ import com.microservices.orderservice.dto.response.external.UserInfoResponseDto;
 import com.microservices.orderservice.dto.response.internal.OrderResponseDto;
 import com.microservices.orderservice.entity.Order;
 import com.microservices.orderservice.entity.OrderProduct;
+import com.microservices.orderservice.enums.OrderStatus;
 import com.microservices.orderservice.exceptionHandling.GeneralException;
 import com.microservices.orderservice.exceptionHandling.OrderException;
 import com.microservices.orderservice.feign.ProductFeignClient;
@@ -48,11 +49,8 @@ public class OrderService {
 
         // persist order
         Order order = orderMapper.toOrder(orderRequestDto);
+        order.setStatus(OrderStatus.PENDING);
 
-//        for (OrderProduct orderProduct : order.getOrderProducts()) {
-//            orderProduct.set
-//
-//        }
 
         // find user with ID
         // TODO: This line was commented out for test purposes

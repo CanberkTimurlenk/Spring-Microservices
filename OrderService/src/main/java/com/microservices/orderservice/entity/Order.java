@@ -1,5 +1,6 @@
 package com.microservices.orderservice.entity;
 
+import com.microservices.orderservice.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +23,8 @@ public class Order extends BaseEntity implements Serializable {
     private String description;
 
     private double shippingCost;
+
+    private OrderStatus status;
 
     private long userId;
     private BigDecimal price;

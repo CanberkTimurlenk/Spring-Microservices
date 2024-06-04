@@ -17,6 +17,7 @@ public class BasketTest {
     private final ShoppingCartService shoppingCartService;
 
 
+    // For Test Purposes
     @PostConstruct
     public void save() {
 
@@ -28,6 +29,5 @@ public class BasketTest {
         ShoppingCartRequestDto shoppingCart = new ShoppingCartRequestDto(1, "CODE1", items);
 
         shoppingCartService.save(shoppingCart);
-
     }
 }

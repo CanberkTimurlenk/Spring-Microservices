@@ -4,6 +4,7 @@ import com.microservices.shipmentservice.dto.request.ShipmentRequestDto;
 import com.microservices.shipmentservice.dto.response.ShipmentResponseDto;
 import com.microservices.shipmentservice.exceptionHandling.GeneralException;
 import com.microservices.shipmentservice.repository.ShipmentRepository;
+import com.microservices.shipmentservice.service.kafka.producer.ShipmentProducer;
 import com.microservices.shipmentservice.service.mapper.ShipmentMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,10 +20,17 @@ public class ShipmentService {
     private final ShipmentRepository shipmentRepository;
     private final ShipmentMapper shipmentMapper;
 
-    public void process(ShipmentRequestDto shipmentRequestDto) {
+    public ShipmentResponseDto process(ShipmentRequestDto shipmentRequestDto) {
 
         Shipment shipment = shipmentMapper.toShipment(shipmentRequestDto);
+
+        // To test compensating actions
+        // Initial point of reverse saga
+//        if(shipmentRequestDto.productShipments().size() > 10 )
+//            throw new GeneralException("A shipment unit could not contain more than 10 unit");
+
         shipmentRepository.save(shipment);
+        return shipmentMapper.toShipmentResponseDto(shipment);
     }
 
     public void update(long shipmentId, ShipmentRequestDto shipmentRequestDto) {
