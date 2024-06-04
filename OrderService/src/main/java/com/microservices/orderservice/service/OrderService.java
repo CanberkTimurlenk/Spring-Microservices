@@ -1,10 +1,12 @@
 package com.microservices.orderservice.service;
 
 import com.microservices.orderservice.dto.request.OrderRequestDto;
+import com.microservices.orderservice.dto.request.ProductRequestDto;
 import com.microservices.orderservice.dto.response.external.ProductResponseDto;
 import com.microservices.orderservice.dto.response.external.UserInfoResponseDto;
 import com.microservices.orderservice.dto.response.internal.OrderResponseDto;
 import com.microservices.orderservice.entity.Order;
+import com.microservices.orderservice.entity.OrderProduct;
 import com.microservices.orderservice.exceptionHandling.GeneralException;
 import com.microservices.orderservice.exceptionHandling.OrderException;
 import com.microservices.orderservice.feign.ProductFeignClient;
@@ -39,14 +41,22 @@ public class OrderService {
 
     public void save(OrderRequestDto orderRequestDto) {
 
-        List<Long> productIds = orderRequestDto.productIdList();
+        List<Long> productIds = orderRequestDto.orderProducts()
+                .stream()
+                .map(ProductRequestDto::productId)
+                .toList();
 
         // persist order
         Order order = orderMapper.toOrder(orderRequestDto);
 
+//        for (OrderProduct orderProduct : order.getOrderProducts()) {
+//            orderProduct.set
+//
+//        }
+
         // find user with ID
         // TODO: This line was commented out for test purposes
-        //UserInfoResponseDto user = userClient.getInfo(orderRequestDto.userId());
+        // UserInfoResponseDto user = userClient.getInfo(orderRequestDto.userId());
 
         // create order number
         order.setOrderNumber(UUID.randomUUID().toString());

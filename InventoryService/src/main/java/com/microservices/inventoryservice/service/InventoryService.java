@@ -13,10 +13,7 @@ import com.microservices.inventoryservice.service.mapper.InventoryMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -73,7 +70,7 @@ public class InventoryService {
     public void stockDecrement(List<StockDecrementDto> stockDecrementDto) {
 
         // Initialize an empty hashset to create StockUpdatedEvent
-        Set<InventoryProduct> inventoryProductSet = new HashSet<>();
+        List<InventoryProduct> inventoryProductSet = new ArrayList<>();
 
         stockDecrementDto.forEach(sd -> {
 
@@ -91,7 +88,7 @@ public class InventoryService {
                 inventoryRepository.save(inventory);
 
                 // Add initial and final stock of specified product to the inventoryProductSet
-                inventoryProductSet.add(new InventoryProduct(sd.productId(), inventory.getStockAmount(), sd.quantity()));
+                inventoryProductSet.add(new InventoryProduct(sd.productId(), inventory.getStockAmount(),  inventory.getStockAmount() - sd.quantity()));
 
             } else
                 throw new GeneralException("Insufficient stock for product Id: "

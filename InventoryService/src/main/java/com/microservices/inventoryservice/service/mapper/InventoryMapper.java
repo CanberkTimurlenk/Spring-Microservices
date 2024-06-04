@@ -3,7 +3,6 @@ package com.microservices.inventoryservice.service.mapper;
 import com.microservices.inventoryservice.dto.request.InventoryRequestDto;
 import com.microservices.inventoryservice.dto.response.InventoryResponseDto;
 import com.microservices.inventoryservice.entity.Inventory;
-import com.microservices.inventoryservice.event.stockupdated.StockUpdatedEvent;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;

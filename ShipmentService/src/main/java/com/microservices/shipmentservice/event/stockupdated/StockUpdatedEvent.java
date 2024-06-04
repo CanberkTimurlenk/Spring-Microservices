@@ -1,4 +1,4 @@
-package com.microservices.inventoryservice.event.stockupdated;
+package com.microservices.shipmentservice.event.stockupdated;
 
 import java.util.Date;
 import java.util.List;

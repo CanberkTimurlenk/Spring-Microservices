@@ -3,6 +3,7 @@ package com.microservices.orderservice.service;
 import com.microservices.orderservice.dto.response.external.ProductResponseDto;
 import com.microservices.orderservice.entity.Order;
 import com.microservices.orderservice.entity.OrderProduct;
+import com.microservices.orderservice.exceptionHandling.GeneralException;
 import com.microservices.orderservice.repository.OrderProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,9 @@ public class OrderProductService {
                     OrderProduct orderProduct = new OrderProduct();
                     orderProduct.setProductId(p.id());
                     orderProduct.setOrder(order);
+                    var quantity = order.getOrderProducts().stream().filter(op -> op.getProductId() == p.id()).findFirst()
+                            .orElseThrow(() -> new GeneralException("An error occured while calculating quantity"));
+                    orderProduct.setQuantity(quantity.getQuantity());
                     return orderProduct;
                 }).toList();
 

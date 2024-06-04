@@ -1,26 +1,32 @@
 package com.microservices.shipmentservice.entity;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.Set;
 
-@MappedSuperclass
+
+@Table(name = "Shipments")
+@Entity
 @Getter
 @Setter
-public class BaseEntity {
+public class Shipment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private long shipmentId;
     @CreationTimestamp
     private Date createDate;
     @UpdateTimestamp
     private Date updateDate;
+
+    @OneToMany(mappedBy = "shipment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<ProductShipment> productShipments;
+
+    // TODO: Weight and total weight could be added in the future
+
 }

@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface InventoryRepository extends ListCrudRepository<Inventory, Long> {
 
     // as a native query
-    @Query(value = "SELECT * FROM Inventories WHERE inventoryAmount = 0", nativeQuery = true)
+    @Query(value = "SELECT * FROM Inventories WHERE stockAmount = 0", nativeQuery = true)
     List<Inventory> findOutOfInventoryItems();
 
     Optional<Inventory> findInventoryByProductId(long productId);

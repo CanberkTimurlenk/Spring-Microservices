@@ -1,4 +1,4 @@
-package com.microservices.inventoryservice.configuration.kafka;
+package com.microservices.shipmentservice.configuration.kafka;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;

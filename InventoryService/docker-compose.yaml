@@ -51,10 +51,10 @@ services:
   #    volumes:
   #      - .m2:/root/.m2
   #
-  inventoryservice-mysql:
+  InventoryService-mysql:
     image: "mysql:8.0"
     restart: always
-    container_name: InventoryService-MySQL
+    container_name: inventoryservice-MySQL
     ports:
       - 3308:3306
     environment:

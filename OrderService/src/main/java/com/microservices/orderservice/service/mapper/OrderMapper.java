@@ -1,6 +1,7 @@
 package com.microservices.orderservice.service.mapper;
 
 import com.microservices.orderservice.dto.request.OrderRequestDto;
+import com.microservices.orderservice.dto.request.ProductRequestDto;
 import com.microservices.orderservice.dto.response.internal.OrderResponseDto;
 import com.microservices.orderservice.entity.Order;
 import com.microservices.orderservice.entity.OrderProduct;
@@ -11,6 +12,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 public interface OrderMapper {
 
 
+    @Mapping(target = "orderProducts", source = "orderProducts", qualifiedByName = "mapToOrderProduct")
     Order toOrder(OrderRequestDto orderRequestDto);
 
     @Mapping(target = "orderId", source = "id")
@@ -28,6 +31,19 @@ public interface OrderMapper {
     default Set<Product> mapToProduct(Set<OrderProduct> orderProducts) {
         return orderProducts.stream()
                 .map(op -> new Product(op.getProductId(), op.getQuantity(), op.getPrice()))
+                .collect(Collectors.toSet());
+    }
+
+    @Named("mapToOrderProduct")
+    default Set<OrderProduct> mapToOrderProduct(Set<ProductRequestDto> productRequestDtos) {
+        return productRequestDtos.stream()
+                .map(pr -> {
+                    var orderProduct = new OrderProduct();
+                    orderProduct.setProductId(pr.productId());
+                    orderProduct.setQuantity(pr.quantity());
+                    return orderProduct;
+
+                })
                 .collect(Collectors.toSet());
     }
 
