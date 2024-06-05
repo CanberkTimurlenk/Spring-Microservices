@@ -5,14 +5,13 @@ import com.microservices.orderservice.dto.request.ProductRequestDto;
 import com.microservices.orderservice.dto.response.internal.OrderResponseDto;
 import com.microservices.orderservice.entity.Order;
 import com.microservices.orderservice.entity.OrderProduct;
-import com.microservices.orderservice.event.OrderCreatedEvent;
-import com.microservices.orderservice.event.Product;
+import com.microservices.orderservice.event.ordercreated.OrderCreatedEvent;
+import com.microservices.orderservice.event.ordercreated.Product;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 

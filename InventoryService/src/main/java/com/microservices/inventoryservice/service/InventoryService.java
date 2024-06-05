@@ -74,7 +74,7 @@ public class InventoryService {
 
         stockDecrementDto.forEach(sd -> {
 
-            Inventory inventory = inventoryRepository.findById(sd.productId())
+            Inventory inventory = inventoryRepository.findInventoryByProductId(sd.productId())
                     .orElseThrow(() ->
                             new GeneralException("Inventory entry not found for product Id: "
                                     + sd.productId()));
@@ -96,8 +96,5 @@ public class InventoryService {
         });
 
         return inventoryProductSet;
-
-        var event = new StockUpdatedEvent(inventoryProductSet, new Date());
-        inventoryProducer.sendStockUpdatedEventToKafka(event);
     }
 }

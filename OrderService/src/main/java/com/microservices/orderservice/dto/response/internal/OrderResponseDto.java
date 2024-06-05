@@ -1,6 +1,6 @@
 package com.microservices.orderservice.dto.response.internal;
 
-import com.microservices.orderservice.event.Product;
+import com.microservices.orderservice.event.ordercreated.Product;
 
 import java.math.BigDecimal;
 import java.util.Date;

@@ -45,6 +45,6 @@ public class StockUpdatedConsumer {
                 ).toList();
 
         var shipment = shipmentService.process(new ShipmentRequestDto(productShipments));
-        shipmentProducer.sendShipmentProcessedEventToKafka(shipmentMapper.toShipmentProcessedEvent(shipment));
+        shipmentProducer.sendShipmentProcessedEventToKafka(shipmentMapper.toShipmentProcessedEvent(shipment, stockUpdatedEvent.orderId()));
     }
 }

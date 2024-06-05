@@ -1,4 +1,4 @@
-package com.microservices.orderservice.event;
+package com.microservices.orderservice.event.ordercreated;
 
 import java.math.BigDecimal;
 

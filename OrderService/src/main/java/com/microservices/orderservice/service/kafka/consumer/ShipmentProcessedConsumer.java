@@ -1,6 +1,8 @@
 package com.microservices.orderservice.service.kafka.consumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.microservices.orderservice.enums.OrderStatus;
+import com.microservices.orderservice.event.shipmentprocessed.ShipmentProcessedEvent;
 import com.microservices.orderservice.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,9 +21,15 @@ public class ShipmentProcessedConsumer {
 
     @KafkaListener(topics = "shipmentProcessedTopic", groupId = "shipmentProcessed")
     @RetryableTopic(attempts = "1", dltStrategy = DltStrategy.FAIL_ON_ERROR)
-    public void listenShipmentProcessed(String message)
-    {
+    public void listenShipmentProcessed(String message) {
         ShipmentProcessedEvent shipmentProcessed;
 
+        try {
+            shipmentProcessed = objectMapper.readValue(message, ShipmentProcessedEvent.class);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        orderService.setOrderStatusByOrderId(shipmentProcessed.orderId(), OrderStatus.COMPLETED);
     }
 }

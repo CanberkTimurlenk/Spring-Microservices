@@ -85,6 +85,15 @@ public class OrderService {
         // SmsSender(new HappySmsStrategy()).sendOrderCreatedSms(order, user);
     }
 
+    public void setOrderStatusByOrderId(long orderId, OrderStatus status) {
+
+        var order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new GeneralException("There is no such an order with order id: " + orderId));
+
+        order.setStatus(status);
+        orderRepository.save(order);
+    }
+
 
     public Optional<List<OrderResponseDto>> findAll() {
 

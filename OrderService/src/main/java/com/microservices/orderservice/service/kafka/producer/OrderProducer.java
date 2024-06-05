@@ -3,7 +3,7 @@ package com.microservices.orderservice.service.kafka.producer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.microservices.orderservice.event.OrderCreatedEvent;
+import com.microservices.orderservice.event.ordercreated.OrderCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
