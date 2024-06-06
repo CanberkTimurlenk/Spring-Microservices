@@ -23,10 +23,9 @@ public class CartCouponService {
 
     public Long save(CartCouponRequestDto couponRequestDto) {
 
-        CartCoupon coupon = null;
-        coupon = couponMapper.cartCouponRequestDtoToCartCoupon(couponRequestDto);
-
+        CartCoupon coupon = couponMapper.cartCouponRequestDtoToCartCoupon(couponRequestDto);
         coupon.setId(sequenceGenerator.generateSequence(CartCoupon.SEQUENCE_NAME));
+
         return couponRepository.save(coupon).getId();
     }
 
@@ -41,15 +40,12 @@ public class CartCouponService {
 
     public Optional<CartCouponResponseDto> update(long couponId, CartCouponRequestDto couponRequestDto) {
 
-        var couponToUpdate = couponRepository.findByIdAndExpirationDateAfter(couponId, new Date());
-
-        if (couponToUpdate.isPresent()) {
-            CartCoupon coupon = couponToUpdate.get();
-            couponMapper.updateCartCoupon(coupon, couponRequestDto);
-            couponRepository.save(coupon);
-            return Optional.of(couponMapper.cartCouponToCartCouponResponseDto(coupon));
-        }
-        return Optional.empty();
+        return couponRepository.findByIdAndExpirationDateAfter(couponId, new Date())
+                .map(coupon -> {
+                    couponMapper.updateCartCoupon(coupon, couponRequestDto);
+                    couponRepository.save(coupon);
+                    return couponMapper.cartCouponToCartCouponResponseDto(coupon);
+                });
     }
 
     public Optional<CartCouponResponseDto> findById(long couponId) {

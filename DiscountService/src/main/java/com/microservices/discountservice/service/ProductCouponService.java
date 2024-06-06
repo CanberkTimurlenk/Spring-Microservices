@@ -46,21 +46,19 @@ public class ProductCouponService {
 
     public Optional<ProductCouponResponseDto> update(long productCouponId, ProductCouponRequestDto productCouponRequestDto) {
 
-        var productCouponToUpdate = productCouponRepository.findByIdAndExpirationDateAfter(productCouponId, new Date());
-
-        if (productCouponToUpdate.isPresent()) {
-            ProductCoupon productCoupon = productCouponToUpdate.get();
-            productCouponMapper.updateProductCoupon(productCoupon, productCouponRequestDto);
-            productCouponRepository.save(productCoupon);
-            return Optional.of(productCouponMapper.productCouponToProductCouponResponseDto(productCoupon));
-        }
-        return Optional.empty();
+        return productCouponRepository
+                .findByIdAndExpirationDateAfter(productCouponId, new Date())
+                .map(productCoupon ->{
+                    productCouponMapper.updateProductCoupon(productCoupon,productCouponRequestDto);
+                    productCouponRepository.save(productCoupon);
+                    return productCouponMapper.productCouponToProductCouponResponseDto(productCoupon);
+                });
     }
 
     public Optional<ProductCouponResponseDto> findById(long productCouponId) {
 
-        Optional<ProductCoupon> productCoupon = productCouponRepository.findByIdAndExpirationDateAfter(productCouponId, new Date());
-        return productCoupon.map(productCouponMapper::productCouponToProductCouponResponseDto);
+        return productCouponRepository.findByIdAndExpirationDateAfter(productCouponId, new Date())
+                .map(productCouponMapper::productCouponToProductCouponResponseDto);
     }
 
     public List<ProductCouponResponseDto> findAll() {
