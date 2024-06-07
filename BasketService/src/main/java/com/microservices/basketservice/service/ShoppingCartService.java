@@ -21,33 +21,36 @@ public class ShoppingCartService {
     private final ShoppingCartMapper shoppingCartMapper;
     private final UserFeignClient userFeignClient;
 
-    public ShoppingCartResponseDto findShoppingCartByUserId(long userId) {
+    public Optional<ShoppingCartResponseDto> findShoppingCartByUserId(long userId) {
 
-        ShoppingCart shoppingCart = shoppingCartRepository.findShoppingCartByUserId(userId);
-        return shoppingCartMapper.shoppingCartToShoppingCartResponseDto(shoppingCart);
+        return shoppingCartRepository.findShoppingCartByUserId(userId)
+                .map(shoppingCartMapper::shoppingCartToShoppingCartResponseDto);
     }
 
     public Optional<ShoppingCartResponseDto> findById(long userId) {
-        Optional<ShoppingCart> shoppingCartOptional = shoppingCartRepository.findById(userId);
-        return shoppingCartOptional.map(shoppingCartMapper::shoppingCartToShoppingCartResponseDto);
+
+        return shoppingCartRepository.findById(userId)
+                .map(shoppingCartMapper::shoppingCartToShoppingCartResponseDto);
     }
 
     public List<ShoppingCartResponseDto> findAll() {
-        List<ShoppingCart> shoppingCarts = shoppingCartRepository.findAll();
-        return shoppingCarts.stream()
-                .map(shoppingCartMapper::shoppingCartToShoppingCartResponseDto).toList();
+
+        return shoppingCartRepository.findAll()
+                .stream()
+                .map(shoppingCartMapper::shoppingCartToShoppingCartResponseDto)
+                .toList();
     }
 
     public boolean deleteById(long userId) {
-        if (shoppingCartRepository.existsById(userId)) {
-            shoppingCartRepository.deleteById(userId);
-            return true;
-        }
-        return false;
+
+        if (!shoppingCartRepository.existsById(userId))
+            return false;
+
+        shoppingCartRepository.deleteById(userId);
+        return true;
     }
 
     public long save(ShoppingCartRequestDto shoppingCartRequestDto) {
-
 
         ShoppingCart shoppingCart = shoppingCartMapper.shoppingCartRequestDtoToShoppingCart(shoppingCartRequestDto);
 
@@ -58,6 +61,8 @@ public class ShoppingCartService {
     }
 
     public Optional<ShoppingCartResponseDto> update(long userId, ShoppingCartRequestDto shoppingCartRequestDto) {
+
+
         if (shoppingCartRepository.existsById(userId)) {
             ShoppingCart shoppingCart = shoppingCartMapper.shoppingCartRequestDtoToShoppingCart(shoppingCartRequestDto);
             shoppingCart.setUserId(userId);
