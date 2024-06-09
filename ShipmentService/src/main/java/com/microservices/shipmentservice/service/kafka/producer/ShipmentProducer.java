@@ -2,6 +2,7 @@ package com.microservices.shipmentservice.service.kafka.producer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.microservices.shipmentservice.event.shipmentcancelled.ShipmentCancelledEvent;
 import com.microservices.shipmentservice.event.shipmentprocessed.ShipmentProcessedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,16 +40,42 @@ public class ShipmentProducer {
 
             sendResultCompletableFuture.whenComplete((result, ex) -> {
                 if (ex == null)
-                    logger.info("Sent message = {} with offset = {}", shipmentProcessedEvent, result.getRecordMetadata().offset());
+                    logger.info("Sent shipment processed message = {} with offset = {}", shipmentProcessedEvent, result.getRecordMetadata().offset());
                 else
-                    logger.error("Unable to send message = {} due to: {}", shipmentProcessedEvent, ex.getMessage());
+                    logger.error("Unable to send shipment processed message = {} due to: {}", shipmentProcessedEvent, ex.getMessage());
 
             });
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         } catch (Exception e) {
-            logger.error("Message is not sent ", e);
+            logger.error("Shipment processed message is not sent ", e);
+        }
+
+    }
+
+    public void sendShipmentCancelledEventToKafka(ShipmentCancelledEvent shipmentCancelledEvent)
+    {
+        String valueAsString = null;
+
+        try {
+            valueAsString = objectMapper.writeValueAsString(shipmentCancelledEvent);
+
+            CompletableFuture<SendResult<String, String>> sendResultCompletableFuture
+                    = kafkaTemplate.send(shipmentProcessed, valueAsString);
+
+            sendResultCompletableFuture.whenComplete((result, ex) -> {
+                if (ex == null)
+                    logger.info("Sent shipment cancelled message = {} with offset = {}", shipmentCancelledEvent, result.getRecordMetadata().offset());
+                else
+                    logger.error("Unable to send shipment cancelled message = {} due to: {}", shipmentCancelledEvent, ex.getMessage());
+
+            });
+
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            logger.error("Shipment cancelled message is not sent ", e);
         }
 
     }

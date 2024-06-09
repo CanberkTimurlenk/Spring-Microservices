@@ -3,6 +3,7 @@ package com.microservices.shipmentservice.service.mapper;
 import com.microservices.shipmentservice.dto.request.ShipmentRequestDto;
 import com.microservices.shipmentservice.dto.response.ShipmentResponseDto;
 import com.microservices.shipmentservice.entity.Shipment;
+import com.microservices.shipmentservice.event.shipmentcancelled.ShipmentCancelledEvent;
 import com.microservices.shipmentservice.event.shipmentprocessed.ShipmentProcessedEvent;
 import org.mapstruct.*;
 
@@ -15,7 +16,10 @@ public interface ShipmentMapper {
 
     Shipment updateShipment(@MappingTarget Shipment shipment, ShipmentRequestDto shipmentRequestDto);
 
-    @Mapping(source = "shipmentResponseDto.productShipments", target = "processedProductShipments")
-    ShipmentProcessedEvent toShipmentProcessedEvent(ShipmentResponseDto shipmentResponseDto, long orderId);
+    @Mapping(source = "shipment.productShipments", target = "processedProductShipments")
+    ShipmentProcessedEvent toShipmentProcessedEvent(Shipment shipment);
+
+
+    ShipmentCancelledEvent toShipmentCancelledEvent(Shipment shipment);
 
 }

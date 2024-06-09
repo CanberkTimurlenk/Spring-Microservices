@@ -19,6 +19,7 @@ public class Shipment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long shipmentId;
+    private long orderId;
     @CreationTimestamp
     private Date createDate;
     @UpdateTimestamp
