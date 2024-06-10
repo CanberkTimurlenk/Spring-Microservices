@@ -5,8 +5,8 @@ import com.microservices.inventoryservice.dto.request.StockDecrementDto;
 import com.microservices.inventoryservice.dto.response.InventoryResponseDto;
 import com.microservices.inventoryservice.entity.Inventory;
 import com.microservices.inventoryservice.event.stockupdated.InventoryProduct;
-import com.microservices.inventoryservice.event.stockupdated.StockUpdatedEvent;
-import com.microservices.inventoryservice.exceptionHandling.GeneralException;
+import com.microservices.inventoryservice.exceptionhandling.GeneralException;
+import com.microservices.inventoryservice.exceptionhandling.InsufficientStockAmountException;
 import com.microservices.inventoryservice.repository.InventoryRepository;
 import com.microservices.inventoryservice.service.kafka.producer.InventoryProducer;
 import com.microservices.inventoryservice.service.mapper.InventoryMapper;
@@ -21,7 +21,6 @@ public class InventoryService {
 
     private final InventoryRepository inventoryRepository;
     private final InventoryMapper inventoryMapper;
-    private final InventoryProducer inventoryProducer;
 
     public void save(InventoryRequestDto inventoryRequestDto) {
 
@@ -64,15 +63,17 @@ public class InventoryService {
 
         return inventoryRepository.findOutOfInventoryItems()
                 .stream()
-                .map(inventoryMapper::toInventoryResponseDto).toList();
+                .map(inventoryMapper::toInventoryResponseDto)
+                .toList();
     }
 
-    public List<InventoryProduct> stockDecrement(List<StockDecrementDto> stockDecrementDto) {
+    public List<InventoryProduct> stockDecrement(List<StockDecrementDto> stockDecrementDtoList)
+            throws InsufficientStockAmountException {
 
-        // Initialize an empty hashset to create StockUpdatedEvent
-        List<InventoryProduct> inventoryProductSet = new ArrayList<>();
+        // Initialize an empty ArrayList to create StockUpdatedEvent
+        List<InventoryProduct> inventoryProductList = new ArrayList<>();
 
-        stockDecrementDto.forEach(sd -> {
+        for (StockDecrementDto sd : stockDecrementDtoList) {
 
             Inventory inventory = inventoryRepository.findInventoryByProductId(sd.productId())
                     .orElseThrow(() ->
@@ -87,14 +88,15 @@ public class InventoryService {
                 inventory.setStockAmount(inventory.getStockAmount() - sd.quantity());
                 inventoryRepository.save(inventory);
 
-                // Add initial and final stock of specified product to the inventoryProductSet
-                inventoryProductSet.add(new InventoryProduct(sd.productId(), inventory.getStockAmount(),  inventory.getStockAmount() - sd.quantity()));
+                // Add initial and final stock of specified product to the inventoryProductList
+                inventoryProductList.add(new InventoryProduct(sd.productId(), inventory.getStockAmount(), inventory.getStockAmount() - sd.quantity()));
 
-            } else
-                throw new GeneralException("Insufficient stock for product Id: "
-                        + sd.productId());
-        });
-
-        return inventoryProductSet;
+            }
+            else {
+                throw new InsufficientStockAmountException(sd.productId());
+            }
+        }
+        return inventoryProductList;
     }
+
 }

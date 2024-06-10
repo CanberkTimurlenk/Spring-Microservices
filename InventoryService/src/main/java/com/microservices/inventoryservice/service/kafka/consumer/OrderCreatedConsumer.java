@@ -3,11 +3,17 @@ package com.microservices.inventoryservice.service.kafka.consumer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microservices.inventoryservice.dto.request.StockDecrementDto;
 import com.microservices.inventoryservice.event.ordercreated.OrderCreatedEvent;
+import com.microservices.inventoryservice.event.stockupdated.InventoryProduct;
 import com.microservices.inventoryservice.event.stockupdated.StockUpdatedEvent;
+import com.microservices.inventoryservice.event.stockupdated.stockupdatecancelled.StockUpdateCancelledEvent;
+import com.microservices.inventoryservice.exceptionhandling.InsufficientStockAmountException;
+import com.microservices.inventoryservice.facade.InventoryFacade;
 import com.microservices.inventoryservice.service.InventoryService;
 import com.microservices.inventoryservice.service.kafka.producer.InventoryProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
 import org.springframework.kafka.retrytopic.DltStrategy;
@@ -22,8 +28,7 @@ import java.util.List;
 public class OrderCreatedConsumer {
 
     private final ObjectMapper objectMapper;
-    private final InventoryService inventoryService;
-    private final InventoryProducer inventoryProducer;
+    private final InventoryFacade inventoryFacade;
 
     @KafkaListener(topics = "orderCreatedTopic", groupId = "orderCreated")
     @RetryableTopic(attempts = "1", dltStrategy = DltStrategy.FAIL_ON_ERROR)
@@ -42,7 +47,6 @@ public class OrderCreatedConsumer {
                         .map(p -> new StockDecrementDto(p.productId(), p.quantity()))
                         .toList();
 
-        var resultSet = inventoryService.stockDecrement(decrementDto);
-        inventoryProducer.sendStockUpdatedEventToKafka(new StockUpdatedEvent(order.orderId(), resultSet, new Date()));
+        inventoryFacade.decreaseStock(decrementDto, order);
     }
 }

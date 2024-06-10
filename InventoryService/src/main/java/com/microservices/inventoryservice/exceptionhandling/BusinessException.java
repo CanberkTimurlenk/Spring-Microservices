@@ -1,4 +1,4 @@
-package com.microservices.inventoryservice.exceptionHandling;
+package com.microservices.inventoryservice.exceptionhandling;
 
 import lombok.Getter;
 import lombok.Setter;

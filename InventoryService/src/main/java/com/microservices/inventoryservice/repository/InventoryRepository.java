@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface InventoryRepository extends ListCrudRepository<Inventory, Long> {
 
-    // as a native query
+    // Native Query
     @Query(value = "SELECT * FROM Inventories WHERE stockAmount = 0", nativeQuery = true)
     List<Inventory> findOutOfInventoryItems();
 

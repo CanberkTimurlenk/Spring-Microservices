@@ -16,4 +16,6 @@ public interface InventoryMapper {
 
     Inventory updateInventory(@MappingTarget Inventory inventory, InventoryRequestDto inventoryRequestDto);
 
+
+
 }
