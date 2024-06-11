@@ -1,4 +1,4 @@
-package com.microservices.shipmentservice.exceptionHandling;
+package com.microservices.shipmentservice.exceptionhandling;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -6,9 +6,8 @@ import com.microservices.inventoryservice.dto.response.InventoryResponseDto;
 import com.microservices.inventoryservice.entity.Inventory;
 import com.microservices.inventoryservice.event.stockupdated.InventoryProduct;
 import com.microservices.inventoryservice.exceptionhandling.GeneralException;
-import com.microservices.inventoryservice.exceptionhandling.InsufficientStockAmountException;
+import com.microservices.inventoryservice.exceptionhandling.InventoryException;
 import com.microservices.inventoryservice.repository.InventoryRepository;
-import com.microservices.inventoryservice.service.kafka.producer.InventoryProducer;
 import com.microservices.inventoryservice.service.mapper.InventoryMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -68,7 +67,7 @@ public class InventoryService {
     }
 
     public List<InventoryProduct> stockDecrement(List<StockDecrementDto> stockDecrementDtoList)
-            throws InsufficientStockAmountException {
+            throws InventoryException {
 
         // Initialize an empty ArrayList to create StockUpdatedEvent
         List<InventoryProduct> inventoryProductList = new ArrayList<>();
@@ -93,7 +92,7 @@ public class InventoryService {
 
             }
             else {
-                throw new InsufficientStockAmountException(sd.productId());
+                throw new InventoryException(sd.productId());
             }
         }
         return inventoryProductList;

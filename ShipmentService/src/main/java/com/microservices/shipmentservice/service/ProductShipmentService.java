@@ -1,14 +1,11 @@
 package com.microservices.shipmentservice.service;
 
 import com.microservices.shipmentservice.dto.request.ProductShipmentRequestDto;
-import com.microservices.shipmentservice.dto.response.ProductShipmentResponseDto;
-import com.microservices.shipmentservice.exceptionHandling.GeneralException;
+import com.microservices.shipmentservice.exceptionhandling.GeneralException;
 import com.microservices.shipmentservice.repository.ProductShipmentRepository;
 import com.microservices.shipmentservice.service.mapper.ProductShipmentMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -44,8 +41,9 @@ public class ProductShipmentService {
 //    }
 
     public void delete(long productShipmentId) {
+
         if (!productShipmentRepository.existsById(productShipmentId))
-            throw new GeneralException("Product Shipment entry not found for product shipment id: " + productShipmentId);
+            throw new GeneralException("Product Shipment entry not found for product shipment shipmentId: " + productShipmentId);
 
         productShipmentRepository.deleteById(productShipmentId);
     }
@@ -60,7 +58,7 @@ public class ProductShipmentService {
                                     productShipmentRepository.save(productShipmentToUpdate);
                                 },
                                 () -> {
-                                    throw new GeneralException("Product Shipment does not exists with id: " + productShipmentId);
+                                    throw new GeneralException("Product Shipment does not exists with shipmentId: " + productShipmentId);
                                 });
 
     }

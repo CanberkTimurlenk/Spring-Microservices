@@ -22,14 +22,16 @@ public class ShipmentProducer {
 
     private static final Logger logger = LoggerFactory.getLogger(ShipmentProducer.class);
 
-    private final KafkaTemplate<String,String> kafkaTemplate;
+    private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper objectMapper;
 
     @Value("${topic.shipment.processed}")
     private String shipmentProcessed;
 
-    public void sendShipmentProcessedEventToKafka(ShipmentProcessedEvent shipmentProcessedEvent)
-    {
+    @Value("${topic.shipment.cancelled}")
+    private String shipmentCancelled;
+
+    public void sendShipmentProcessedEventToKafka(ShipmentProcessedEvent shipmentProcessedEvent) {
         String valueAsString = null;
 
         try {
@@ -43,7 +45,6 @@ public class ShipmentProducer {
                     logger.info("Sent shipment processed message = {} with offset = {}", shipmentProcessedEvent, result.getRecordMetadata().offset());
                 else
                     logger.error("Unable to send shipment processed message = {} due to: {}", shipmentProcessedEvent, ex.getMessage());
-
             });
 
         } catch (JsonProcessingException e) {
@@ -51,18 +52,16 @@ public class ShipmentProducer {
         } catch (Exception e) {
             logger.error("Shipment processed message is not sent ", e);
         }
-
     }
 
-    public void sendShipmentCancelledEventToKafka(ShipmentCancelledEvent shipmentCancelledEvent)
-    {
+    public void sendShipmentCancelledEventToKafka(ShipmentCancelledEvent shipmentCancelledEvent) {
         String valueAsString = null;
 
         try {
             valueAsString = objectMapper.writeValueAsString(shipmentCancelledEvent);
 
             CompletableFuture<SendResult<String, String>> sendResultCompletableFuture
-                    = kafkaTemplate.send(shipmentProcessed, valueAsString);
+                    = kafkaTemplate.send(shipmentCancelled, valueAsString);
 
             sendResultCompletableFuture.whenComplete((result, ex) -> {
                 if (ex == null)

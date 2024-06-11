@@ -1,4 +1,4 @@
-package com.microservices.shipmentservice.exceptionHandling;
+package com.microservices.shipmentservice.exceptionhandling;
 
 public class ProductException extends BusinessException {
 

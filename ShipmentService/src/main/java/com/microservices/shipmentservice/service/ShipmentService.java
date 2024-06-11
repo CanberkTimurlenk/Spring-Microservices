@@ -2,8 +2,8 @@ package com.microservices.shipmentservice.service;
 
 import com.microservices.shipmentservice.dto.request.ShipmentRequestDto;
 import com.microservices.shipmentservice.dto.response.ShipmentResponseDto;
-import com.microservices.shipmentservice.event.shipmentprocessed.ShipmentProcessedEvent;
-import com.microservices.shipmentservice.exceptionHandling.GeneralException;
+import com.microservices.shipmentservice.exceptionhandling.GeneralException;
+import com.microservices.shipmentservice.exceptionhandling.ShipmentException;
 import com.microservices.shipmentservice.repository.ShipmentRepository;
 import com.microservices.shipmentservice.service.kafka.producer.ShipmentProducer;
 import com.microservices.shipmentservice.service.mapper.ShipmentMapper;
@@ -22,30 +22,25 @@ public class ShipmentService {
     private final ShipmentMapper shipmentMapper;
     private final ShipmentProducer shipmentProducer;
 
-    public ShipmentResponseDto process(ShipmentRequestDto shipmentRequestDto) {
+    public ShipmentResponseDto process(ShipmentRequestDto shipmentRequestDto)
+            throws ShipmentException {
 
-        Shipment shipment = null;
-        try {
-            shipment = shipmentMapper.toShipment(shipmentRequestDto);
+        Shipment shipment = shipmentMapper.toShipment(shipmentRequestDto);
 
-            // To test compensating actions
-            // Initial point of reverse saga
-//        if(shipmentRequestDto.productShipments().size() > 10 )
-//            throw new GeneralException("A shipment unit could not contain more than 10 unit");
+        // To test compensating actions
+        // Initial point of reverse saga
+        if (shipmentRequestDto.productShipments().size() > 10)
+            throw new ShipmentException("A shipment unit could not contain more than 10 unit");
 
-            shipmentRepository.save(shipment);
-            shipmentProducer.sendShipmentProcessedEventToKafka(
-                    shipmentMapper.toShipmentProcessedEvent(shipment));
-
-        }
-
-        catch (Exception ex)
-        {
-            shipmentProducer.sendShipmentCancelledEventToKafka(shipmentMapper.toShipmentCancelledEvent(shipment));
-        }
+        shipmentRepository.save(shipment);
+        shipmentProducer.sendShipmentProcessedEventToKafka(shipmentMapper.toShipmentProcessedEvent(shipment));
 
         return shipmentMapper.toShipmentResponseDto(shipment);
 
+//         catch (Exception ex) {
+//            shipmentProducer.sendShipmentCancelledEventToKafka(shipmentMapper.toShipmentCancelledEvent(shipment));
+//            throw new GeneralException("An exception occurred during shipment process!");
+//        }
     }
 
     public void update(long shipmentId, ShipmentRequestDto shipmentRequestDto) {

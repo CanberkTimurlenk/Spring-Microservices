@@ -4,9 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microservices.shipmentservice.dto.request.ProductShipmentRequestDto;
 import com.microservices.shipmentservice.dto.request.ShipmentRequestDto;
 import com.microservices.shipmentservice.event.stockupdated.StockUpdatedEvent;
-import com.microservices.shipmentservice.service.ShipmentService;
-import com.microservices.shipmentservice.service.kafka.producer.ShipmentProducer;
-import com.microservices.shipmentservice.service.mapper.ShipmentMapper;
+import com.microservices.shipmentservice.facade.ShipmentFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -20,9 +18,7 @@ import org.springframework.stereotype.Component;
 public class StockUpdatedConsumer {
 
     private final ObjectMapper objectMapper;
-    private final ShipmentService shipmentService;
-    private final ShipmentProducer shipmentProducer;
-    private final ShipmentMapper shipmentMapper;
+    private final ShipmentFacade shipmentFacade;
 
     @KafkaListener(topics = "stockUpdatedTopic", groupId = "stockUpdated")
     @RetryableTopic(attempts = "1", dltStrategy = DltStrategy.FAIL_ON_ERROR)
@@ -44,7 +40,6 @@ public class StockUpdatedConsumer {
                                 , su.initialStockAmount() - su.finalStockAmount())
                 ).toList();
 
-        var shipment = shipmentService.process(new ShipmentRequestDto(productShipments));
-        shipmentProducer.sendShipmentProcessedEventToKafka(shipmentMapper.toShipmentProcessedEvent(shipment, stockUpdatedEvent.orderId()));
+        shipmentFacade.processShipment(new ShipmentRequestDto(productShipments), stockUpdatedEvent.orderId());
     }
 }

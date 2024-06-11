@@ -19,6 +19,9 @@ public interface ShipmentMapper {
     @Mapping(source = "shipment.productShipments", target = "processedProductShipments")
     ShipmentProcessedEvent toShipmentProcessedEvent(Shipment shipment);
 
+    @Mapping(source = "shipmentResponseDto.productShipments", target = "processedProductShipments")
+    ShipmentProcessedEvent toShipmentProcessedEvent(ShipmentResponseDto shipmentResponseDto,long orderId);
+
 
     ShipmentCancelledEvent toShipmentCancelledEvent(Shipment shipment);
 

@@ -50,6 +50,5 @@ public class OrderProducer {
         } catch (Exception e) {
             logger.error("Message is not sent ", e);
         }
-
     }
 }

@@ -1,4 +1,9 @@
 package com.microservices.shipmentservice.event.shipmentcancelled;
 
-public record ShipmentCancelledEvent(long shipmentId, long orderId) {
+import com.microservices.shipmentservice.dto.request.ProductShipmentRequestDto;
+
+import java.util.Date;
+import java.util.List;
+
+public record ShipmentCancelledEvent(long orderId, List<ProductShipmentRequestDto> productShipments, Date createdDate) {
 }

@@ -3,6 +3,7 @@ package com.microservices.inventoryservice.service.kafka.producer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microservices.inventoryservice.event.stockupdated.StockUpdatedEvent;
+import com.microservices.inventoryservice.event.stockupdated.stockupdatecancelled.StockUpdateCancelledEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -27,6 +28,9 @@ public class InventoryProducer {
     @Value("${topic.stock.updated}")
     private String stockUpdatedTopic;
 
+    @Value("${topic.stock.update.cancelled}")
+    private String stockUpdateCancelledTopic;
+
     public void sendStockUpdatedEventToKafka(StockUpdatedEvent stockUpdatedEvent) {
         String valueAsString = null;
 
@@ -38,19 +42,40 @@ public class InventoryProducer {
 
             sendResultCompletableFuture.whenComplete((result, ex) -> {
                 if (ex == null)
-                    logger.info("Sent message = {} with offset = {}", stockUpdatedEvent, result.getRecordMetadata().offset());
+                    logger.info("Sent stock updated message = {} with offset = {}", stockUpdatedEvent, result.getRecordMetadata().offset());
                 else
-                    logger.error("Unable to send message = {} due to: {}", stockUpdatedEvent, ex.getMessage());
+                    logger.error("Unable to send stock updated message = {} due to: {}", stockUpdatedEvent, ex.getMessage());
 
             });
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         } catch (Exception e) {
-            logger.error("Message is not sent ", e);
+            logger.error("Stock updated message is not sent ", e);
         }
+    }
 
+    public void sendStockUpdateCancelledEventToKafka(StockUpdateCancelledEvent stockUpdateCancelledEvent) {
+        String valueAsString = null;
+        try {
+            valueAsString = objectMapper.writeValueAsString(stockUpdateCancelledEvent);
 
+            CompletableFuture<SendResult<String, String>> sendResultCompletableFuture
+                    = kafkaTemplate.send(stockUpdateCancelledTopic, valueAsString);
+
+            sendResultCompletableFuture.whenComplete((result, ex) -> {
+                if (ex == null)
+                    logger.info("Stock update cancelled message = {} with offset = {}", stockUpdateCancelledEvent, result.getRecordMetadata().offset());
+                else
+                    logger.error("Unable to send stock update cancelled message = {} due to: {}", stockUpdateCancelledEvent, ex.getMessage());
+
+            });
+
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            logger.error("Stock update cancelled message is not sent ", e);
+        }
     }
 
 }

@@ -1,4 +1,4 @@
-package com.microservices.inventoryservice.exceptionHandling;
+package com.microservices.inventoryservice.exceptionhandling;
 
 public class GeneralException extends RuntimeException{
 
