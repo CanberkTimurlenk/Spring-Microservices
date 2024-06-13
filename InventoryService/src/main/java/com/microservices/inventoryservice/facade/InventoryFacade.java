@@ -22,19 +22,17 @@ import java.util.List;
 @Service
 public class InventoryFacade {
 
-    private static final Logger logger = LoggerFactory.getLogger(InventoryFacade.class);
-
     private final InventoryProducer inventoryProducer;
     private final InventoryService inventoryService;
 
     public void decreaseStock(List<StockDecrementDto> decrementDto, long orderId) {
 
         try {
-            List<InventoryProduct> resultList = inventoryService.stockDecrement(decrementDto);
+            List<InventoryProduct> resultList = inventoryService.reserveStock(decrementDto);
             inventoryProducer.sendStockUpdatedEventToKafka(new StockUpdatedEvent(orderId, resultList, new Date()));
         } catch (InventoryException e) {
             // Execute if an exception occurs during deduction
-            logger.error("{} : occurred while executing order saga", e.getMessage());
+            log.error("{} : occurred while executing order saga", e.getMessage());
             inventoryProducer.sendStockUpdateCancelledEventToKafka(new StockUpdateCancelledEvent(orderId, decrementDto, new Date()));
         }
     }

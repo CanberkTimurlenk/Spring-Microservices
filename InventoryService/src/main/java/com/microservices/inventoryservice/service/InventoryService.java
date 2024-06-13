@@ -66,7 +66,7 @@ public class InventoryService {
                 .toList();
     }
 
-    public List<InventoryProduct> stockDecrement(List<StockDecrementDto> stockDecrementDtoList)
+    public List<InventoryProduct> reserveStock(List<StockDecrementDto> stockDecrementDtoList)
             throws InventoryException {
 
         // Initialize an empty ArrayList to create StockUpdatedEvent

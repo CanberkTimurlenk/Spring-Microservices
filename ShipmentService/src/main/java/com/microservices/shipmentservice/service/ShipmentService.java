@@ -1,5 +1,6 @@
 package com.microservices.shipmentservice.service;
 
+import com.microservices.shipmentservice.dto.request.ProductShipmentRequestDto;
 import com.microservices.shipmentservice.dto.request.ShipmentRequestDto;
 import com.microservices.shipmentservice.dto.response.ShipmentResponseDto;
 import com.microservices.shipmentservice.exceptionhandling.GeneralException;
@@ -20,7 +21,6 @@ public class ShipmentService {
 
     private final ShipmentRepository shipmentRepository;
     private final ShipmentMapper shipmentMapper;
-    private final ShipmentProducer shipmentProducer;
 
     public ShipmentResponseDto process(ShipmentRequestDto shipmentRequestDto)
             throws ShipmentException {
@@ -29,18 +29,14 @@ public class ShipmentService {
 
         // To test compensating actions
         // Initial point of reverse saga
-        if (shipmentRequestDto.productShipments().size() > 10)
-            throw new ShipmentException("A shipment unit could not contain more than 10 unit");
+        for (var productShipmentRequestDto : shipmentRequestDto.productShipments()) {
+            if (productShipmentRequestDto.quantity() > 10)
+                throw new ShipmentException("A shipment unit could not contain more than 10 unit");
+
+        }
 
         shipmentRepository.save(shipment);
-        shipmentProducer.sendShipmentProcessedEventToKafka(shipmentMapper.toShipmentProcessedEvent(shipment));
-
         return shipmentMapper.toShipmentResponseDto(shipment);
-
-//         catch (Exception ex) {
-//            shipmentProducer.sendShipmentCancelledEventToKafka(shipmentMapper.toShipmentCancelledEvent(shipment));
-//            throw new GeneralException("An exception occurred during shipment process!");
-//        }
     }
 
     public void update(long shipmentId, ShipmentRequestDto shipmentRequestDto) {

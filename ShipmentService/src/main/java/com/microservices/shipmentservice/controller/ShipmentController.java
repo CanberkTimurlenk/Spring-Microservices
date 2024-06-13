@@ -2,6 +2,7 @@ package com.microservices.shipmentservice.controller;
 
 import com.microservices.shipmentservice.dto.request.ShipmentRequestDto;
 import com.microservices.shipmentservice.dto.response.ShipmentResponseDto;
+import com.microservices.shipmentservice.exceptionhandling.ShipmentException;
 import com.microservices.shipmentservice.service.ShipmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,11 @@ public class ShipmentController {
     @PostMapping
     public ResponseEntity<Void> process(ShipmentRequestDto shipmentRequestDto) {
 
-        shipmentService.process(shipmentRequestDto);
+        try {
+            shipmentService.process(shipmentRequestDto);
+        } catch (ShipmentException e) {
+            return ResponseEntity.internalServerError().build();
+        }
         return ResponseEntity.ok().build();
     }
 

@@ -1,6 +1,8 @@
 package com.microservices.orderservice.entity;
 
+import com.microservices.orderservice.dto.response.external.ProductResponseDto;
 import com.microservices.orderservice.enums.OrderStatus;
+import com.microservices.orderservice.exceptionHandling.OrderException;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,4 +30,6 @@ public class Order extends BaseEntity implements Serializable {
 
     private long userId;
     private BigDecimal price;
+
+
 }
