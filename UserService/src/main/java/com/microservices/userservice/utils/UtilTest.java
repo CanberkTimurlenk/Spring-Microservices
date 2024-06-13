@@ -12,7 +12,6 @@ public class UtilTest {
 
     private final UserService userService;
 
-
     @PostConstruct
     public void saveTestData() {
 
@@ -21,14 +20,13 @@ public class UtilTest {
                 "John",
                 "Doe",
                 "john.doe@example.com",
+                "123",
                 "+1234567890",
                 "123 Main Street, Cityville, ST 12345",
+                "admin",
                 true
         );
-
         // save sample user date
         userService.save(userRequestDto);
-
-
     }
 }

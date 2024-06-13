@@ -3,6 +3,7 @@ package com.microservices.userservice.service.mapper;
 import com.microservices.userservice.dto.UserRequestDto;
 import com.microservices.userservice.dto.UserResponseDto;
 import com.microservices.userservice.entity.User;
+import com.microservices.userservice.grpc.generated.UserGrpcRequestDto;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
@@ -14,6 +15,8 @@ public interface UserMapper {
     User updateUser(@MappingTarget User user, UserRequestDto dto);
 
     UserResponseDto userToUserResponseDto(User user);
+
+    UserRequestDto toUserRequestDto(UserGrpcRequestDto userGrpcRequestDto);
 
 
 }
