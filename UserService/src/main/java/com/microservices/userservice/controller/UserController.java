@@ -1,12 +1,17 @@
 package com.microservices.userservice.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microservices.userservice.dto.UserRequestDto;
 import com.microservices.userservice.dto.UserResponseDto;
+import com.microservices.userservice.facade.UserFacade;
 import com.microservices.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,11 +22,17 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
+    private final UserFacade userFacade;
 
-    @PostMapping
-    public ResponseEntity<String> create(@RequestBody UserRequestDto userRequestDto) {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> create(
+            @RequestPart String userRequestDtoStr,
+            @RequestPart MultipartFile multipartFile
+            ) throws JsonProcessingException {
 
-        return userService.save(userRequestDto)
+        ObjectMapper objectMapper = new ObjectMapper();
+        UserRequestDto userRequestDto = objectMapper.readValue(userRequestDtoStr, UserRequestDto.class);
+        return userFacade.save(userRequestDto,multipartFile)
                 ? new ResponseEntity<>("Successfully Created!", HttpStatus.CREATED)
                 : new ResponseEntity<>("An Unexpected Error Occured!", HttpStatus.OK);
     }

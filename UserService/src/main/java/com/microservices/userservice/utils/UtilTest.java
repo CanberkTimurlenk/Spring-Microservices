@@ -16,18 +16,18 @@ public class UtilTest {
     @PostConstruct
     public void saveTestData() {
 
-        // create sample user data
-        UserRequestDto userRequestDto = new UserRequestDto(
-                "John",
-                "Doe",
-                "john.doe@example.com",
-                "+1234567890",
-                "123 Main Street, Cityville, ST 12345",
-                true
-        );
-
-        // save sample user date
-        userService.save(userRequestDto);
+//        // create sample user data
+//        UserRequestDto userRequestDto = new UserRequestDto(
+//                "John",
+//                "Doe",
+//                "john.doe@example.com",
+//                "+1234567890",
+//                "123 Main Street, Cityville, ST 12345",
+//                true
+//        );
+//
+//        // save sample user date
+//        userService.save(userRequestDto);
 
 
     }

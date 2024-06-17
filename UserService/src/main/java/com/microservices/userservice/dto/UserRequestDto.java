@@ -1,8 +1,15 @@
 package com.microservices.userservice.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
+import java.util.UUID;
 
 
 public record UserRequestDto(String firstname, String lastname, String email, String phoneNumber,
-                             String address, boolean premium) implements Serializable {
+                             String address, boolean premium, @JsonIgnore String userImageKey) implements Serializable {
+
+    public UserRequestDto {
+        userImageKey = UUID.randomUUID().toString();
+    }
 }
