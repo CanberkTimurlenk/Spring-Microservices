@@ -1,8 +1,11 @@
 package com.microservices.mobilemarket.config;
 
+import com.microservices.mobilemarket.auth.jwt.JwtService;
+import com.microservices.mobilemarket.filter.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -14,14 +17,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final JwtService jwtService;
+    private final JwtAuthFilter jwtAuthFilter;
     private final UserDetailsService userDetailsService;
 
     private static final String[] AUTH_WHITELIST = {
-            "/api/auth/login",
-            "/api/auth/register"
+            "/auth/login",
+            "/auth/register"
     };
 
     @Bean

@@ -1,20 +1,27 @@
 package com.microservices.userservice.service;
 
+import com.microservices.userservice.dto.UserCredentials;
 import com.microservices.userservice.dto.UserRequestDto;
 import com.microservices.userservice.dto.UserResponseDto;
 import com.microservices.userservice.entity.User;
+import com.microservices.userservice.exceptionHandling.BusinessException;
+import com.microservices.userservice.exceptionHandling.UserAlreadyExistsException;
+import com.microservices.userservice.exceptionHandling.UserException;
+import com.microservices.userservice.grpc.generated.UserServiceGrpc;
 import com.microservices.userservice.repository.UserRepository;
 import com.microservices.userservice.service.mapper.UserMapper;
 import com.microservices.userservice.service.sms.BlueSmsStrategy;
 import com.microservices.userservice.service.sms.HappySmsStrategy;
 import com.microservices.userservice.service.sms.SmsSender;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserService {
 
@@ -30,6 +37,13 @@ public class UserService {
     }
 
     public boolean save(UserRequestDto userRequestDto) {
+
+        var userExists = userRepository.existsByEmail(userRequestDto.email());
+
+        if (userExists) {
+            log.error("Attempt to create a new user with an existing email: {}", userRequestDto.email());
+            throw new UserAlreadyExistsException(userRequestDto.email());
+        }
 
         User user = userMapper.userRequestDtoToUser(userRequestDto);
         userRepository.save(user);
@@ -49,11 +63,11 @@ public class UserService {
         userRepository.save(updatedUser);
 
         // Send Sms
-        if (updatedUser.isPremium())
-            new SmsSender(new HappySmsStrategy()).sendUserUpdatedSms(user.get());
-
-        else
-            new SmsSender(new BlueSmsStrategy()).sendUserUpdatedSms(user.get());
+//        if (updatedUser.isPremium())
+//            new SmsSender(new HappySmsStrategy()).sendUserUpdatedSms(user.get());
+//
+//        else
+//            new SmsSender(new BlueSmsStrategy()).sendUseranUpdatedSms(user.get());
 
         return true;
     }
@@ -65,7 +79,18 @@ public class UserService {
         return user.stream().map(userMapper::userToUserResponseDto).toList();
     }
 
+    public Optional<UserResponseDto> findUserByEmail(String email) {
+
+        return userRepository.findUserByEmail(email)
+                .map(userMapper::userToUserResponseDto);
+    }
+
     public Boolean checkIfUserIsValid(long userId) {
         return userRepository.existsById(userId);
+    }
+
+    public Optional<UserResponseDto> findByCredentials(UserCredentials credentials) {
+        return userRepository.findUserByEmailAndPassword(credentials.email(), credentials.password())
+                .map(userMapper::userToUserResponseDto);
     }
 }

@@ -13,10 +13,10 @@ import java.util.List;
 @FeignClient(name = "ProductService")
 public interface ProductFeignClient {
 
-    @PostMapping
+    @PostMapping("/products")
     String save(@RequestBody ProductRequestDto productRequestDto);
 
-    @GetMapping
+    @GetMapping("/products")
     List<ProductResponseDto> findAll(@RequestParam(required = false) List<Long> productIds);
 
     @GetMapping("/products/byCategory")

@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+option java_package = "com.microservices.mobilemarket.grpc.generated";
+option java_multiple_files = true;
+
+//    Find User By Credentials   //
+message UserCredentialsGrpcRequestDto {
+  string email = 1;
+  string password = 2;
+}
+//    *******************************************   //
+
+
+//    Find User By Email   //
+message EmailGrpcRequestDto {
+  string email = 1;
+}
+//    *******************************************   //
+
+
+//    Save User   //
+message UserGrpcRequestDto
+{
+  string firstname = 1;
+  string lastname = 2;
+  string email = 3;
+  string password = 4;
+  string phoneNumber = 5;
+  string address = 6;
+  string role = 7;
+  bool premium = 8;
+}
+//    *******************************************   //
+
+
+//    User Grpc Response  //
+message UserGrpcResponseDto
+{
+  int64 id = 1;
+  string firstname = 2;
+  string lastname = 3;
+  string email = 4;
+  string password = 5;
+  string phoneNumber = 6;
+  string address = 7;
+  string role = 8;
+  bool premium = 9;
+}
+//    *******************************************   //
+
+
+service UserService {
+  rpc findUserByCredentials(UserCredentialsGrpcRequestDto) returns (UserGrpcResponseDto);
+  rpc findUserByEmail(EmailGrpcRequestDto) returns (UserGrpcResponseDto);
+  rpc saveUser(UserGrpcRequestDto) returns (google.protobuf.Empty);
+}

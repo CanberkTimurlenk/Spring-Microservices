@@ -24,6 +24,7 @@ services:
     ports:
       - "3304:3306"
     environment:
+      MYSQL_USER: admin
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: UserService
     restart: always

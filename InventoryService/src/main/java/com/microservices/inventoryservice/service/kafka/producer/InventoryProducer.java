@@ -20,8 +20,6 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class InventoryProducer {
 
-    private static final Logger logger = LoggerFactory.getLogger(InventoryProducer.class);
-
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper objectMapper;
 
@@ -42,16 +40,16 @@ public class InventoryProducer {
 
             sendResultCompletableFuture.whenComplete((result, ex) -> {
                 if (ex == null)
-                    logger.info("Sent stock updated message = {} with offset = {}", stockUpdatedEvent, result.getRecordMetadata().offset());
+                    log.info("Sent stock updated message = {} with offset = {}", stockUpdatedEvent, result.getRecordMetadata().offset());
                 else
-                    logger.error("Unable to send stock updated message = {} due to: {}", stockUpdatedEvent, ex.getMessage());
+                    log.error("Unable to send stock updated message = {} due to: {}", stockUpdatedEvent, ex.getMessage());
 
             });
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         } catch (Exception e) {
-            logger.error("Stock updated message is not sent ", e);
+            log.error("Stock updated message is not sent ", e);
         }
     }
 
@@ -65,16 +63,16 @@ public class InventoryProducer {
 
             sendResultCompletableFuture.whenComplete((result, ex) -> {
                 if (ex == null)
-                    logger.info("Stock update cancelled message = {} with offset = {}", stockUpdateCancelledEvent, result.getRecordMetadata().offset());
+                    log.info("Stock update cancelled message = {} with offset = {}", stockUpdateCancelledEvent, result.getRecordMetadata().offset());
                 else
-                    logger.error("Unable to send stock update cancelled message = {} due to: {}", stockUpdateCancelledEvent, ex.getMessage());
+                    log.error("Unable to send stock update cancelled message = {} due to: {}", stockUpdateCancelledEvent, ex.getMessage());
 
             });
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         } catch (Exception e) {
-            logger.error("Stock update cancelled message is not sent ", e);
+            log.error("Stock update cancelled message is not sent ", e);
         }
     }
 

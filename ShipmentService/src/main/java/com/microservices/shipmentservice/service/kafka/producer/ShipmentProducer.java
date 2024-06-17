@@ -20,8 +20,6 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class ShipmentProducer {
 
-    private static final Logger logger = LoggerFactory.getLogger(ShipmentProducer.class);
-
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper objectMapper;
 
@@ -42,15 +40,15 @@ public class ShipmentProducer {
 
             sendResultCompletableFuture.whenComplete((result, ex) -> {
                 if (ex == null)
-                    logger.info("Sent shipment processed message = {} with offset = {}", shipmentProcessedEvent, result.getRecordMetadata().offset());
+                    log.info("Sent shipment processed message = {} with offset = {}", shipmentProcessedEvent, result.getRecordMetadata().offset());
                 else
-                    logger.error("Unable to send shipment processed message = {} due to: {}", shipmentProcessedEvent, ex.getMessage());
+                    log.error("Unable to send shipment processed message = {} due to: {}", shipmentProcessedEvent, ex.getMessage());
             });
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         } catch (Exception e) {
-            logger.error("Shipment processed message is not sent ", e);
+            log.error("Shipment processed message is not sent ", e);
         }
     }
 
@@ -65,16 +63,16 @@ public class ShipmentProducer {
 
             sendResultCompletableFuture.whenComplete((result, ex) -> {
                 if (ex == null)
-                    logger.info("Sent shipment cancelled message = {} with offset = {}", shipmentCancelledEvent, result.getRecordMetadata().offset());
+                    log.info("Sent shipment cancelled message = {} with offset = {}", shipmentCancelledEvent, result.getRecordMetadata().offset());
                 else
-                    logger.error("Unable to send shipment cancelled message = {} due to: {}", shipmentCancelledEvent, ex.getMessage());
+                    log.error("Unable to send shipment cancelled message = {} due to: {}", shipmentCancelledEvent, ex.getMessage());
 
             });
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         } catch (Exception e) {
-            logger.error("Shipment cancelled message is not sent ", e);
+            log.error("Shipment cancelled message is not sent ", e);
         }
 
     }

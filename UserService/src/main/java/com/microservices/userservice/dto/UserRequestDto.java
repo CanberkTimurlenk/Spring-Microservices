@@ -6,8 +6,8 @@ import java.io.Serializable;
 import java.util.UUID;
 
 
-public record UserRequestDto(String firstname, String lastname, String email, String phoneNumber,
-                             String address, boolean premium, @JsonIgnore String userImageKey) implements Serializable {
+public record UserRequestDto(String firstname, String lastname, String email,String password, String phoneNumber,
+                             String address, boolean premium, String role, @JsonIgnore String userImageKey) implements Serializable {
 
     public UserRequestDto {
         userImageKey = UUID.randomUUID().toString();

@@ -1,5 +1,6 @@
 package com.microservices.userservice.controller;
 
+import com.microservices.userservice.dto.UserCredentials;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microservices.userservice.dto.UserRequestDto;
@@ -7,6 +8,7 @@ import com.microservices.userservice.dto.UserResponseDto;
 import com.microservices.userservice.facade.UserFacade;
 import com.microservices.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -48,16 +50,15 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<UserResponseDto>> findAll() {
 
-        return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
+        return ResponseEntity.ok(userService.findAll());
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserResponseDto> findById(@PathVariable long userId) {
 
-        Optional<UserResponseDto> user = userService.findById(userId);
-
-        return user.map(userResponseDto -> new ResponseEntity<>(userResponseDto, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        return userService.findById(userId)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/userValidity")
@@ -69,4 +70,11 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
+    @PostMapping("/findByCredentials")
+    public ResponseEntity<UserResponseDto> findByCredentials(@RequestBody UserCredentials credentials) {
+
+        return userService.findByCredentials(credentials)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }

@@ -66,7 +66,7 @@ public class InventoryService {
                 .toList();
     }
 
-    public List<InventoryProduct> stockDecrement(List<StockDecrementDto> stockDecrementDtoList)
+    public List<InventoryProduct> reserveStock(List<StockDecrementDto> stockDecrementDtoList)
             throws InventoryException {
 
         // Initialize an empty ArrayList to create StockUpdatedEvent
@@ -74,28 +74,20 @@ public class InventoryService {
 
         for (StockDecrementDto sd : stockDecrementDtoList) {
 
+            // for each decrement in the request, retrieve the related inventory record by productId
             Inventory inventory = inventoryRepository.findInventoryByProductId(sd.productId())
                     .orElseThrow(() ->
-                            new GeneralException("Inventory entry not found for product Id: "
-                                    + sd.productId()));
+                            new GeneralException("Inventory entry not found for product Id: " + sd.productId()));
 
-            if (inventory.getStockAmount() > 0
-                    && inventory.getStockAmount() - sd.quantity() > 0) {
-                // Execute this block if the final stock amount is non-negative
+            // reserve stock (decrement)
+            inventory.reserveStock(sd.quantity());
+            inventoryRepository.save(inventory);
 
-                // Deduct the quantity specified in the order from the current stock amount
-                inventory.setStockAmount(inventory.getStockAmount() - sd.quantity());
-                inventoryRepository.save(inventory);
-
-                // Add initial and final stock of specified product to the inventoryProductList
-                inventoryProductList.add(new InventoryProduct(sd.productId(), inventory.getStockAmount(), inventory.getStockAmount() - sd.quantity()));
-
-            }
-            else {
-                throw new InventoryException(sd.productId());
-            }
+            // Add initial and final stock of specified product to the inventoryProductList
+            inventoryProductList.add(
+                    new InventoryProduct(sd.productId(), inventory.getStockAmount(),
+                            inventory.getStockAmount() - sd.quantity()));
         }
         return inventoryProductList;
     }
-
 }
