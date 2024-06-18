@@ -2,6 +2,7 @@ package com.microservices.inventoryservice.service;
 
 import com.microservices.inventoryservice.dto.request.InventoryRequestDto;
 import com.microservices.inventoryservice.dto.request.StockDecrementDto;
+import com.microservices.inventoryservice.dto.request.StockIncrementDto;
 import com.microservices.inventoryservice.dto.response.InventoryResponseDto;
 import com.microservices.inventoryservice.entity.Inventory;
 import com.microservices.inventoryservice.event.stockupdated.InventoryProduct;
@@ -87,6 +88,30 @@ public class InventoryService {
             inventoryProductList.add(
                     new InventoryProduct(sd.productId(), inventory.getStockAmount(),
                             inventory.getStockAmount() - sd.quantity()));
+        }
+        return inventoryProductList;
+    }
+
+    public List<InventoryProduct> increaseStock(List<StockIncrementDto> stockIncrementDtoList) {
+
+        // Initialize an empty ArrayList to create StockUpdatedEvent
+        List<InventoryProduct> inventoryProductList = new ArrayList<>();
+
+        for (StockIncrementDto si : stockIncrementDtoList) {
+
+            // for each decrement in the request, retrieve the related inventory record by productId
+            Inventory inventory = inventoryRepository.findInventoryByProductId(si.productId())
+                    .orElseThrow(() ->
+                            new GeneralException("Inventory entry not found for product Id: " + si.productId()));
+
+            // increase stock
+            inventory.increaseStock(si.quantity());
+            inventoryRepository.save(inventory);
+
+            // Add initial and final stock of specified product to the inventoryProductList
+            inventoryProductList.add(
+                    new InventoryProduct(si.productId(), inventory.getStockAmount(),
+                            inventory.getStockAmount() + si.quantity()));
         }
         return inventoryProductList;
     }

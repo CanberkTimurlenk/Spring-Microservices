@@ -36,6 +36,12 @@ public class Inventory {
         return stockAmount;
     }
 
+    public long increaseStock(long incrementAmount)
+    {
+        stockAmount = stockAmount + incrementAmount;
+        return stockAmount;
+    }
+
     public void setStockAmount(long stockAmount) {
 
         if (stockAmount < 0)
