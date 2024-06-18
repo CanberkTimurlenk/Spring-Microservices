@@ -66,9 +66,6 @@ public class OrderService {
         // TODO: This line was commented out for test purposes
         //order.setShippingCost(getShippingOffer(products, user));
 
-        // persist order
-        orderRepository.save(order);
-
         try {
             checkIfOrderAmountIsSufficent(products);
             checkIfOrderHasMoreThanThreeProductsInSameCategory(products);
@@ -77,6 +74,8 @@ public class OrderService {
             throw new GeneralException("exception occured" + e.getMessage());
         }
 
+        // persist order
+        orderRepository.save(order);
         // persist orderProducts
         orderProductService.saveAll(products, order);
 
