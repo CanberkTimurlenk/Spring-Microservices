@@ -3,6 +3,7 @@ package com.microservices.orderservice.controller;
 
 import com.microservices.orderservice.dto.request.OrderRequestDto;
 import com.microservices.orderservice.dto.response.internal.OrderResponseDto;
+import com.microservices.orderservice.facade.OrderFacade;
 import com.microservices.orderservice.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,11 +18,12 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final OrderFacade orderFacade;
 
     @PostMapping
     public ResponseEntity<Void> create(@RequestBody OrderRequestDto orderRequestDto) {
 
-        orderService.save(orderRequestDto);
+        orderFacade.createOrder(orderRequestDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
 
     }

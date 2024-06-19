@@ -92,7 +92,7 @@ public class InventoryService {
         return inventoryProductList;
     }
 
-    public List<InventoryProduct> increaseStock(List<StockIncrementDto> stockIncrementDtoList) {
+    public List<InventoryProduct> increaseStock(List<StockIncrementDto> stockIncrementDtoList)   {
 
         // Initialize an empty ArrayList to create StockUpdatedEvent
         List<InventoryProduct> inventoryProductList = new ArrayList<>();

@@ -18,39 +18,44 @@ import com.microservices.orderservice.service.kafka.producer.OrderProducer;
 import com.microservices.orderservice.service.mapper.OrderMapper;
 import com.microservices.orderservice.service.shipping.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class OrderService {
 
-    private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
-
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
-    private final OrderProductService orderProductService;
     private final ProductFeignClient productClient;
-    private final OrderProducer orderProducer;
 
-    public void save(OrderRequestDto orderRequestDto) {
+    public OrderResponseDto save(OrderRequestDto orderRequestDto) {
 
-        List<Long> productIds = orderRequestDto.orderProducts()
+        List<Long> productIds = orderRequestDto.productRequestDtoSet()
                 .stream()
                 .map(ProductRequestDto::productId)
                 .toList();
 
+        // get products
+        List<ProductResponseDto> products = productClient.getProductsById(productIds);
+
+        try {
+            checkIfOrderAmountIsSufficent(products);
+            checkIfOrderHasMoreThanThreeProductsInSameCategory(products);
+        } catch (OrderException e) {
+            log.error("an exception {}", e.getMessage());
+            throw new GeneralException("exception occured" + e.getMessage());
+        }
+
         // persist order
         Order order = orderMapper.toOrder(orderRequestDto);
         order.setStatus(OrderStatus.PENDING);
-
 
         // find user with ID
         // TODO: This line was commented out for test purposes
@@ -59,29 +64,16 @@ public class OrderService {
         // create order number
         order.setOrderNumber(UUID.randomUUID().toString());
 
-        // get products
-        List<ProductResponseDto> products = productClient.getProductsById(productIds);
-
         // set shipment cost
         // TODO: This line was commented out for test purposes
         //order.setShippingCost(getShippingOffer(products, user));
 
-        try {
-            checkIfOrderAmountIsSufficent(products);
-            checkIfOrderHasMoreThanThreeProductsInSameCategory(products);
-        } catch (OrderException e) {
-            logger.error("an exception {}", e.getMessage());
-            throw new GeneralException("exception occured" + e.getMessage());
-        }
-
-        // persist order
+         // persist order
         orderRepository.save(order);
-        // persist orderProducts
-        orderProductService.saveAll(products, order);
-
-        orderProducer.sendOrderCreatedEventToKafka(orderMapper.toOrderCreatedEvent(order));
 
         // SmsSender(new HappySmsStrategy()).sendOrderCreatedSms(order, user);
+
+        return orderMapper.toOrderResponseDto(order);
     }
 
     public void setOrderStatusByOrderId(long orderId, OrderStatus status) {
@@ -92,7 +84,6 @@ public class OrderService {
         order.setStatus(status);
         orderRepository.save(order);
     }
-
 
     public Optional<List<OrderResponseDto>> findAll() {
 

@@ -7,10 +7,7 @@ import com.microservices.orderservice.entity.Order;
 import com.microservices.orderservice.entity.OrderProduct;
 import com.microservices.orderservice.event.ordercreated.OrderCreatedEvent;
 import com.microservices.orderservice.event.ordercreated.Product;
-import org.mapstruct.InjectionStrategy;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
+import org.mapstruct.*;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -19,12 +16,19 @@ import java.util.stream.Collectors;
 public interface OrderMapper {
 
 
-    @Mapping(target = "orderProducts", source = "orderProducts", qualifiedByName = "mapToOrderProduct")
+    @Mapping(target = "orderProducts", source = "productRequestDtoSet", qualifiedByName = "mapToOrderProduct")
     Order toOrder(OrderRequestDto orderRequestDto);
 
     @Mapping(target = "orderId", source = "id")
     @Mapping(target = "products", source = "orderProducts", qualifiedByName = "mapToProduct")
     OrderResponseDto toOrderResponseDto(Order order);
+
+    OrderCreatedEvent toOrderCreatedEvent(OrderResponseDto orderResponseDto);
+
+    @AfterMapping
+    default void setOrder(@MappingTarget Order order, OrderRequestDto orderRequestDto) {
+        order.getOrderProducts().forEach(op -> op.setOrder(order));
+    }
 
     @Named("mapToProduct")
     default Set<Product> mapToProduct(Set<OrderProduct> orderProducts) {
@@ -46,7 +50,5 @@ public interface OrderMapper {
                 .collect(Collectors.toSet());
     }
 
-    @Mapping(target = "orderId", source = "id")
-    @Mapping(target = "products", source = "orderProducts", qualifiedByName = "mapToProduct")
-    OrderCreatedEvent toOrderCreatedEvent(Order order);
+
 }
