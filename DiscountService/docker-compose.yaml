@@ -1,28 +1,28 @@
-version: "3.7"
+version: "3.8"
 services:
-#  api_service:
-#    build: .
-#    image: assignment11/rd:latest
-#    container_name: Assignment11
-#    restart: always
-#    ports:
-#      - 8086:8080
-#    networks:
-#      - springapipostgres-net
-#    environment:
-#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/RDCommerce
-#      SPRING_DATASOURCE_USERNAME: postgres
-#      SPRING_DATASOURCE_PASSWORD: Ab123456
-#    depends_on:
-#      - postgres
+  #  api_service:
+  #    build: .
+  #    image: assignment11/rd:latest
+  #    container_name: Assignment11
+  #    restart: always
+  #    ports:
+  #      - 8086:8080
+  #    networks:
+  #      - springapipostgres-net
+  #    environment:
+  #      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/RDCommerce
+  #      SPRING_DATASOURCE_USERNAME: postgres
+  #      SPRING_DATASOURCE_PASSWORD: Ab123456
+  #    depends_on:
+  #      - postgres
 
-  mongo:
+  discountservice-mongodb:
     image: mongo
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-      MONGO_INITDB_DATABASE: springboot_mongo
+      MONGO_INITDB_ROOT_PASSWORD: mongodbpass123
+      MONGO_INITDB_DATABASE: DiscountService
     ports:
       - "27018:27017"
   mongo-express:
@@ -32,20 +32,6 @@ services:
       - 8051:8081
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: example
-      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+      ME_CONFIG_MONGODB_ADMINPASSWORD: mongodbpass123
+      ME_CONFIG_MONGODB_URL: mongodb://root:mongodbpass123@mongo:27017/
       ME_CONFIG_BASICAUTH: false
-
-
-#  discountservice-mysql:
-#    image: mysql:8.0
-#    container_name: discountservice-mysql
-#    ports:
-#      - "3303:3306"
-#    environment:
-#      MYSQL_ROOT_PASSWORD: secret
-#      MYSQL_DATABASE: DiscountService
-#    restart: always
-
-
- 

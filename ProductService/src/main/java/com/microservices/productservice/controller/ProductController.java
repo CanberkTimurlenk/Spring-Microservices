@@ -28,23 +28,25 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<ProductResponseDto>> findAll(@RequestParam(required = false) List<Long> productIds) {
 
-        var productResponseDtos = productService.findAll(productIds);
+        var productResponseDtoList = productService.findAll(productIds);
 
-        return new ResponseEntity<>(productResponseDtos, HttpStatus.OK);
+        return new ResponseEntity<>(productResponseDtoList, HttpStatus.OK);
     }
 
     @GetMapping("/byCategory")
     public ResponseEntity<List<ProductResponseDto>> findByCategory(@RequestParam String category) {
 
-        var productResponseDtos = productService.findByCategory(category);
+        var productResponseDtoList = productService.findByCategory(category);
 
-        return new ResponseEntity<>(productResponseDtos, HttpStatus.OK);
+        return new ResponseEntity<>(productResponseDtoList, HttpStatus.OK);
     }
 
     @GetMapping("/productExists/{productId}")
     public ResponseEntity<Boolean> checkIfProductExists(@PathVariable long productId) {
 
-        if (productService.checkIfProductIsValid(productId))
+        boolean productIsValid = productService.checkIfProductIsValid(productId);
+
+        if (productIsValid)
             return ResponseEntity.ok(true);
 
         return ResponseEntity.notFound().build();

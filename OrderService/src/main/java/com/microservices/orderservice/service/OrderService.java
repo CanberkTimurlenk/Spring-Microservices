@@ -37,7 +37,7 @@ public class OrderService {
 
     public OrderResponseDto save(OrderRequestDto orderRequestDto) {
 
-        List<Long> productIds = orderRequestDto.productRequestDtoSet()
+        List<Long> productIds = orderRequestDto.orderProducts()
                 .stream()
                 .map(ProductRequestDto::productId)
                 .toList();

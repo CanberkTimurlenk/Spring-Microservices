@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 public interface OrderMapper {
 
 
-    @Mapping(target = "orderProducts", source = "productRequestDtoSet", qualifiedByName = "mapToOrderProduct")
     Order toOrder(OrderRequestDto orderRequestDto);
 
     @Mapping(target = "orderId", source = "id")
@@ -36,19 +35,4 @@ public interface OrderMapper {
                 .map(op -> new Product(op.getProductId(), op.getQuantity(), op.getPrice()))
                 .collect(Collectors.toSet());
     }
-
-    @Named("mapToOrderProduct")
-    default Set<OrderProduct> mapToOrderProduct(Set<ProductRequestDto> productRequestDtos) {
-        return productRequestDtos.stream()
-                .map(pr -> {
-                    var orderProduct = new OrderProduct();
-                    orderProduct.setProductId(pr.productId());
-                    orderProduct.setQuantity(pr.quantity());
-                    return orderProduct;
-
-                })
-                .collect(Collectors.toSet());
-    }
-
-
 }

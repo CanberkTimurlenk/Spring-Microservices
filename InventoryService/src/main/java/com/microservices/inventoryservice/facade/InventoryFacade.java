@@ -1,7 +1,6 @@
 package com.microservices.inventoryservice.facade;
 
 import com.microservices.inventoryservice.dto.request.StockDecrementDto;
-import com.microservices.inventoryservice.event.ordercreated.OrderCreatedEvent;
 import com.microservices.inventoryservice.event.stockupdated.InventoryProduct;
 import com.microservices.inventoryservice.event.stockupdated.StockUpdatedEvent;
 import com.microservices.inventoryservice.event.stockupdated.stockupdatecancelled.StockUpdateCancelledEvent;
@@ -39,7 +38,6 @@ public class InventoryFacade {
     }
 
     public void increaseStock(List<StockIncrementDto> incrementDtoList, long orderId) {
-
         List<InventoryProduct> resultList = inventoryService.increaseStock(incrementDtoList);
         inventoryProducer.sendStockUpdateCancelledEventToKafka(new StockUpdateCancelledEvent(orderId, resultList, new Date()));
     }
