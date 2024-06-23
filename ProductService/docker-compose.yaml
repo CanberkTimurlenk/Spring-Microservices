@@ -1,22 +1,22 @@
 version: "3.8"
 services:
-  #  api_service:
-  #    build: .
-  #    image: assignment11/rd:latest
-  #    container_name: Assignment11
-  #    restart: always
-  #    ports:
-  #      - 8086:8080
-  #    networks:
-  #      - springapipostgres-net
-  #    environment:
-  #      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/RDCommerce
-  #      SPRING_DATASOURCE_USERNAME: postgres
-  #      SPRING_DATASOURCE_PASSWORD: Ab123456
-  #    depends_on:
-  #      - postgres
-  #    volumes:
-  #      - .m2:/root/.m2
+  api_service:
+    build: .
+    image: productservice/ecommerce-microservices:latest
+    container_name: ProductService
+    restart: always
+    ports:
+      - 8086:8080
+    networks:
+      - springapipostgres-net
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/ProductService?allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: secret
+    depends_on:
+      - productservice-mysql
+    volumes:
+      - .m2:/root/.m2
   productservice-mysql:
     image: "mysql:8.0"
     restart: always
