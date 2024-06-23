@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  eureka-server:
+    build: .
+    image: eurekaserver/ecommerce-microservices
+    container_name: EurekaServer
+    restart: always
+    ports:
+      - "9999:9999"
+    networks:
+      - ecommerce-microservices-net
+
+networks:
+  ecommerce-microservices-net:
+    external: true

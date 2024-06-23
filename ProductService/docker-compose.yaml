@@ -2,21 +2,22 @@ version: "3.8"
 services:
   api_service:
     build: .
-    image: productservice/ecommerce-microservices:latest
+    image: productservice/ecommerce-microservices
     container_name: ProductService
     restart: always
     ports:
       - 8086:8080
     networks:
-      - springapipostgres-net
+      - ecommerce-microservices-net
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/ProductService?allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_URL: jdbc:mysql://productservice-mysql:3306/ProductService?allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: secret
     depends_on:
       - productservice-mysql
     volumes:
       - .m2:/root/.m2
+
   productservice-mysql:
     image: "mysql:8.0"
     restart: always
@@ -28,3 +29,10 @@ services:
       MYSQL_USER: admin
       MYSQL_PASSWORD: secret
       MYSQL_ROOT_PASSWORD: Amila_Rpw
+      EUREKASERVER_URL: http://eurekaserver:9999/eureka/
+    networks:
+      - ecommerce-microservices-net
+
+networks:
+  ecommerce-microservices-net:
+    external: true
