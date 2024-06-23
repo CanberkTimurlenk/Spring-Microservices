@@ -1,8 +1,8 @@
-version: "3.8"
+version: "3.9"
 services:
   eureka-server:
     build: .
-    image: eurekaserver/ecommerce-microservices
+    image: eurekaserver/ecommerce-microservices:latest
     container_name: EurekaServer
     restart: always
     ports:

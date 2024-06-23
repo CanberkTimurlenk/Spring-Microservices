@@ -1,20 +1,22 @@
-version: "3.8"
+version: "3.9"
 services:
   api_service:
     build: .
-    image: productservice/ecommerce-microservices
+    image: productservice/ecommerce-microservices:latest
     container_name: ProductService
     restart: always
     ports:
-      - 8086:8080
+      - 8086:8081
     networks:
       - ecommerce-microservices-net
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://productservice-mysql:3306/ProductService?allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: secret
+      EUREKA_CLIENT_SERVICE_URL: http://eureka-server:9999/eureka/
     depends_on:
-      - productservice-mysql
+      productservice-mysql:
+        condition: service_healthy
     volumes:
       - .m2:/root/.m2
 
@@ -29,9 +31,13 @@ services:
       MYSQL_USER: admin
       MYSQL_PASSWORD: secret
       MYSQL_ROOT_PASSWORD: Amila_Rpw
-      EUREKASERVER_URL: http://eurekaserver:9999/eureka/
     networks:
       - ecommerce-microservices-net
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "--silent" ]
+      interval: 10s
+      timeout: 3s
+      retries: 5
 
 networks:
   ecommerce-microservices-net:
