@@ -1,26 +1,30 @@
-version: "3.8"
+version: "3.9"
 services:
-  #  api_service:
-  #    build: .
-  #    image: assignment11/rd:latest
-  #    container_name: Assignment11
-  #    restart: always
-  #    ports:
-  #      - 8086:8080
-  #    networks:
-  #      - springapipostgres-net
-  #    environment:
-  #      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/RDCommerce
-  #      SPRING_DATASOURCE_USERNAME: postgres
-  #      SPRING_DATASOURCE_PASSWORD: Ab123456
-  #    depends_on:
-  #      - postgres
-  #    volumes:
-  #      - .m2:/root/.m2
-  ShipmentService-MySQL:
+  shipmentservice-api:
+    build: .
+    image: shipmentservice/ecommerce-microservices:latest
+    container_name: ShipmentService
+    restart: always
+    ports:
+      - 8084:8092
+    networks:
+      - ecommerce-microservices-net
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://shipmentservice-mysql:3306/ShipmentService?allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: secret
+      EUREKA_CLIENT_SERVICE_URL: http://eureka-server:9999/eureka/
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    depends_on:
+      shipmentservice-mysql:
+        condition: service_healthy
+    volumes:
+      - .m2:/root/.m2
+
+  shipmentservice-mysql:
     image: "mysql:8.0"
     restart: always
-    container_name: shipmentservice-mysql
+    container_name: ShipmentService-MySQL
     ports:
       - "3312:3306"
     environment:
@@ -28,3 +32,14 @@ services:
       MYSQL_USER: admin
       MYSQL_PASSWORD: secret
       MYSQL_ROOT_PASSWORD: Amila_Rpw
+    networks:
+      - ecommerce-microservices-net
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "--silent" ]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+networks:
+  ecommerce-microservices-net:
+    external: true

@@ -1,33 +1,47 @@
 version: "3.8"
 services:
-  #  api_service:
-  #    build: .
-  #    image: assignment11/rd:latest
-  #    container_name: Assignment11
-  #    restart: always
-  #    ports:
-  #      - 8086:8080
-  #    networks:
-  #      - springapipostgres-net
-  #    environment:
-  #      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/RDCommerce
-  #      SPRING_DATASOURCE_USERNAME: postgres
-  #      SPRING_DATASOURCE_PASSWORD: Ab123456
-  #    depends_on:
-  #      - orderservice-mysql
-  #    volumes:
-  #      - .m2:/root/.m2
-  orderservice-mysql:
-    image: "mysql:8.0"
+  orderservice-api:
+    build: .
+    image: orderservice/ecommerce-microservices:latest
+    container_name: OrderService
     restart: always
-    container_name: OrderService-MySQL
     ports:
-      - 3306:3306
+      - 8085:8080
+    networks:
+      - ecommerce-microservices-net
     environment:
-      MYSQL_DATABASE: OrderService
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: secret
-      MYSQL_ROOT_PASSWORD: Amila_Rpw
+      SPRING_DATASOURCE_URL: jdbc:postgresql://orderservice-postgres:5432/OrderService
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: Ab123456
+      EUREKA_CLIENT_SERVICE_URL: http://eureka-server:9999/eureka/
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    depends_on:
+      orderservice-postgres:
+        condition: service_healthy
+    volumes:
+      - .m2:/root/.m2
+
+  orderservice-postgres:
+    image: "postgres:latest"
+    restart: always
+    container_name: OrderService-Postgres
+    ports:
+      - 5430:5432
+    environment:
+      POSTGRES_DB: OrderService
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Ab123456
+    healthcheck:
+        test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+        interval: 10s
+        timeout: 3s
+        retries: 5
+    networks:
+      - ecommerce-microservices-net
+
+networks:
+  ecommerce-microservices-net:
+    external: true
 
 
 
