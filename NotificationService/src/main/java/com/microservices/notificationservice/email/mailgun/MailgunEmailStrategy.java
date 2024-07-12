@@ -1,23 +1,27 @@
 package com.microservices.notificationservice.email.mailgun;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.microservices.notificationservice.dto.MailDto;
+import com.microservices.notificationservice.dto.EmailRequestDto;
 import com.microservices.notificationservice.email.EmailStrategy;
 
 import com.microservices.notificationservice.email.mailgun.client.MailgunUnirestClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@Service
+
 @RequiredArgsConstructor
 public class MailgunEmailStrategy implements EmailStrategy {
 
     private final MailgunUnirestClient mailgunUnirestClient;
 
     @Override
-    public void send() throws UnirestException {
+    public void send(EmailRequestDto emailRequestDto) {
 
-        MailDto mailDto = new MailDto("TO", "SUBJECT", "BODY");
-        mailgunUnirestClient.sendMessage("FROM", mailDto.to(), mailDto.subject(), mailDto.body());
+        emailRequestDto = new EmailRequestDto("TO", "SUBJECT", "BODY");
+        try {
+            mailgunUnirestClient.sendMessage("FROM", emailRequestDto.to(), emailRequestDto.subject(), emailRequestDto.body());
+        } catch (UnirestException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

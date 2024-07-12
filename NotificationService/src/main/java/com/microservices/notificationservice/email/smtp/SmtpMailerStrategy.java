@@ -6,7 +6,7 @@ import com.microservices.notificationservice.email.EmailStrategy;
 
 public class SmtpMailerStrategy implements EmailStrategy {
     @Override
-    public void send() throws JsonProcessingException, UnirestException {
+    public void send() {
         // TODO: Implement the method body
 
     }

@@ -24,7 +24,7 @@ services:
     ports:
       - "3304:3306"
     environment:
-      MYSQL_DATABASE: ShipmentService
+      MYSQL_DATABASE: UserService
       MYSQL_USER: admin
       MYSQL_PASSWORD: secret
       MYSQL_ROOT_PASSWORD: Amila_Rpw

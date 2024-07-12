@@ -10,5 +10,6 @@
 /ProductService/target/
 /MobileMarket/target/
 /WebMarket/target
+/NotificationService/target
 /.idea
 /S3-Upload-Library/target/

@@ -22,9 +22,9 @@ public class StorageService {
     }
 
     public void save(FileStrategy file) {
-            var objectKey = file.getName();
-            var bucketName = awsS3BucketProperties.getBucketName();
-            s3Template.upload(bucketName, objectKey, file.getInputStream());
+        var objectKey = file.getName();
+        var bucketName = awsS3BucketProperties.getBucketName();
+        s3Template.upload(bucketName, objectKey, file.getInputStream());
     }
 
     public void save(FileStrategy file,String objectKey) {
