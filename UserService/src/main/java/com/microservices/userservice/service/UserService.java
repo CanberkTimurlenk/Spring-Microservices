@@ -7,7 +7,6 @@ import com.microservices.userservice.entity.User;
 import com.microservices.userservice.exceptionHandling.BusinessException;
 import com.microservices.userservice.exceptionHandling.UserAlreadyExistsException;
 import com.microservices.userservice.exceptionHandling.UserException;
-import com.microservices.userservice.grpc.generated.UserServiceGrpc;
 import com.microservices.userservice.repository.UserRepository;
 import com.microservices.userservice.service.mapper.UserMapper;
 import com.microservices.userservice.service.sms.BlueSmsStrategy;

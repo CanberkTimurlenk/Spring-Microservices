@@ -16,8 +16,8 @@ public class S3Config {
     private String bucketName;
 
     @Bean
-    public StorageService storageService(S3Template s3Template) {
-        return new StorageService(s3Template, new AwsS3BucketProperties(bucketName));
+    public StorageService storageService( ) {
+        return new StorageService(new AwsS3BucketProperties(bucketName));
     }
 
 }

@@ -6,7 +6,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
-@EnableFeignClients
 @EnableAsync
 public class OrderServiceApplication {
 
