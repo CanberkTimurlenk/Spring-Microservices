@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class MailgunUnirestClient {
+public class MailgunUnirestClient implements MailgunClient {
 
     private final MailgunProperties mailgunProperties;
 

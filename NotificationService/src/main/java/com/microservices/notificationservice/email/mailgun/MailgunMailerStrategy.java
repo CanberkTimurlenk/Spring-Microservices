@@ -8,18 +8,18 @@ import com.microservices.notificationservice.email.mailgun.client.MailgunUnirest
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-
+@Service("MailgunMailer")
 @RequiredArgsConstructor
-public class MailgunEmailStrategy implements EmailStrategy {
+public class MailgunMailerStrategy implements EmailStrategy {
 
     private final MailgunUnirestClient mailgunUnirestClient;
 
     @Override
-    public void send(EmailRequestDto emailRequestDto) {
+    public void send(EmailRequestDto emailRequest) {
 
-        emailRequestDto = new EmailRequestDto("TO", "SUBJECT", "BODY");
+        emailRequest = new EmailRequestDto("TO", "SUBJECT", "BODY");
         try {
-            mailgunUnirestClient.sendMessage("FROM", emailRequestDto.to(), emailRequestDto.subject(), emailRequestDto.body());
+            mailgunUnirestClient.sendMessage("FROM", emailRequest.to(), emailRequest.subject(), emailRequest.body());
         } catch (UnirestException e) {
             throw new RuntimeException(e);
         }
