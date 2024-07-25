@@ -1,4 +1,4 @@
-package com.microservices.notificationservice.configuration.mailgun;
+package com.microservices.notificationservice.configuration.email.mailgun;
 
 import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;

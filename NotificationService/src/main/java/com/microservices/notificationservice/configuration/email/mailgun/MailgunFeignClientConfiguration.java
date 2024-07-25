@@ -1,4 +1,4 @@
-package com.microservices.notificationservice.configuration.mailgun;
+package com.microservices.notificationservice.configuration.email.mailgun;
 
 import feign.auth.BasicAuthRequestInterceptor;
 import feign.codec.Decoder;
