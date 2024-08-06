@@ -5,13 +5,13 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
-import com.microservices.notificationservice.configuration.mailgun.MailgunProperties;
+import com.microservices.notificationservice.configuration.email.mailgun.MailgunProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class MailgunUnirestClient {
+public class MailgunUnirestClient implements MailgunClient {
 
     private final MailgunProperties mailgunProperties;
 

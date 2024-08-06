@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RequestParam;
         name = "mailgunClient",
         url = "${mailgun.url}",
         configuration = MailgunFeignClient.class)
-public interface MailgunFeignClient {
+public interface MailgunFeignClient extends MailgunClient {
 
     @PostMapping(value = "/v3/domain/messages", consumes = "application/x-www-form-urlencoded")
     JsonNode sendMessage(@PathVariable("domain") String domain,
                          @RequestParam("from") String from,
                          @RequestParam("to") String to,
                          @RequestParam("subject") String subject,
-                         @RequestParam("text") String text);
+                         @RequestParam("text") String body);
 
 }
