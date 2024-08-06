@@ -1,11 +1,11 @@
-package com.microservices.discountservice.service;
+package com.microservices.discountservice.write.service;
 
 
 import com.microservices.discountservice.dto.CartCouponRequestDto;
 import com.microservices.discountservice.dto.CartCouponResponseDto;
 import com.microservices.discountservice.entity.CartCoupon;
-import com.microservices.discountservice.repository.CartCouponRepository;
-import com.microservices.discountservice.service.mapper.CartCouponMapper;
+import com.microservices.discountservice.write.repository.CartCouponRepository;
+import com.microservices.discountservice.write.service.mapper.CartCouponMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,12 +19,10 @@ public class CartCouponService {
 
     private final CartCouponRepository couponRepository;
     private final CartCouponMapper couponMapper;
-    private final SequenceGeneratorService sequenceGenerator;
 
     public Long save(CartCouponRequestDto couponRequestDto) {
 
         CartCoupon coupon = couponMapper.cartCouponRequestDtoToCartCoupon(couponRequestDto);
-        coupon.setId(sequenceGenerator.generateSequence(CartCoupon.SEQUENCE_NAME));
 
         return couponRepository.save(coupon).getId();
     }

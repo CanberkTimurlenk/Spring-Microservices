@@ -1,4 +1,4 @@
-package com.microservices.discountservice.service.mapper;
+package com.microservices.discountservice.write.service.mapper;
 
 import com.microservices.discountservice.dto.ProductCouponRequestDto;
 import com.microservices.discountservice.dto.ProductCouponResponseDto;

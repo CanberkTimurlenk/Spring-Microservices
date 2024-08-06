@@ -2,7 +2,7 @@ package com.microservices.discountservice.controller;
 
 import com.microservices.discountservice.dto.CartCouponRequestDto;
 import com.microservices.discountservice.dto.CartCouponResponseDto;
-import com.microservices.discountservice.service.CartCouponService;
+import com.microservices.discountservice.write.service.CartCouponService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

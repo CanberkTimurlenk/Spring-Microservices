@@ -1,4 +1,4 @@
-package com.microservices.discountservice.repository;
+package com.microservices.discountservice.write.repository;
 
 import com.microservices.discountservice.entity.ProductCoupon;
 import org.springframework.data.repository.ListCrudRepository;

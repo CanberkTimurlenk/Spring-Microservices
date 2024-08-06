@@ -1,12 +1,12 @@
-package com.microservices.discountservice.service;
+package com.microservices.discountservice.write.service;
 
 import com.microservices.discountservice.dto.ProductCouponRequestDto;
 import com.microservices.discountservice.dto.ProductCouponResponseDto;
 import com.microservices.discountservice.entity.ProductCoupon;
 import com.microservices.discountservice.exceptionHandling.BusinessException;
 import com.microservices.discountservice.feign.ProductFeignClient;
-import com.microservices.discountservice.repository.ProductCouponRepository;
-import com.microservices.discountservice.service.mapper.ProductCouponMapper;
+import com.microservices.discountservice.write.repository.ProductCouponRepository;
+import com.microservices.discountservice.write.service.mapper.ProductCouponMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,6 @@ public class ProductCouponService {
 
     private final ProductCouponRepository productCouponRepository;
     private final ProductCouponMapper productCouponMapper;
-    private final SequenceGeneratorService sequenceGenerator;
     private final ProductFeignClient productClient;
 
     public Long save(ProductCouponRequestDto productCouponRequestDto) {
@@ -31,7 +30,6 @@ public class ProductCouponService {
             throw new BusinessException("A product does not exist for id: " + productCouponRequestDto.productId());
 
         ProductCoupon productCoupon = productCouponMapper.productCouponRequestDtoToProductCoupon(productCouponRequestDto);
-        productCoupon.setId(sequenceGenerator.generateSequence(ProductCoupon.SEQUENCE_NAME));
         return productCouponRepository.save(productCoupon).getId();
     }
 

@@ -16,22 +16,14 @@ services:
   #    depends_on:
   #      - postgres
 
-  discountservice-mongodb:
-    image: mongo
+  discountservice-mysql-write:
+    image: "mysql:8.0"
     restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: mongodbpass123
-      MONGO_INITDB_DATABASE: DiscountService
+    container_name: DiscountService-MySQL-WriteStorage
     ports:
-      - "27018:27017"
-  mongo-express:
-    image: mongo-express
-    restart: always
-    ports:
-      - 8051:8081
+      - 3301:3306
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: mongodbpass123
-      ME_CONFIG_MONGODB_URL: mongodb://root:mongodbpass123@mongo:27017/
-      ME_CONFIG_BASICAUTH: false
+      MYSQL_DATABASE: DiscountService
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: Amila_Rpw
