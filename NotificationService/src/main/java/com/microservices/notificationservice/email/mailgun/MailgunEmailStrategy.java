@@ -6,9 +6,10 @@ import com.microservices.notificationservice.email.EmailStrategy;
 
 import com.microservices.notificationservice.email.mailgun.client.MailgunUnirestClient;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 
+@Component("mailgunEmailStrategy")
 @RequiredArgsConstructor
 public class MailgunEmailStrategy implements EmailStrategy {
 
