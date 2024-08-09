@@ -1,12 +1,15 @@
 package com.microservices.notificationservice.email;
 
+import com.microservices.notificationservice.constant.Email;
 import com.microservices.notificationservice.dto.EmailRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
+@Component
 @RequiredArgsConstructor
 public class EmailSender {
-
-    private final Map<String, EmailStrategy> emailStrategyMap;
 
     private final Map<String, EmailStrategy> emailStrategyMap;
 
@@ -16,10 +19,10 @@ public class EmailSender {
         // otherwise use Mailgun
 
         if (emailRequest.body().length() > 100) {
-            emailStrategyMap.get(SMTP_EMAIL_STRATEGY).send(emailRequest);
+            emailStrategyMap.get(Email.SMTP_EMAIL_STRATEGY).send(emailRequest);
             return;
         }
 
-        emailStrategyMap.get(MAILGUN_EMAIL_STRATEGY).send(emailRequest);
+        emailStrategyMap.get(Email.MAILGUN_EMAIL_STRATEGY).send(emailRequest);
     }
 }

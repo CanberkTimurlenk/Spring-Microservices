@@ -1,9 +1,8 @@
 package com.microservices.userservice.configuration;
 
-import io.awspring.cloud.s3.S3Template;
 import lombok.RequiredArgsConstructor;
-import org.common.s3.properties.AwsS3BucketProperties;
-import org.common.s3.service.StorageService;
+import org.common.sns.properties.AwsS3BucketProperties;
+import org.common.sns.service.StorageService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

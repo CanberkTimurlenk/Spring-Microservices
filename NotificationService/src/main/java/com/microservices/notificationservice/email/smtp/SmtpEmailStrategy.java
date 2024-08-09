@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 @Component("SmtpEmailStrategy")
 public class SmtpEmailStrategy implements EmailStrategy {
 
+    // **
     @Override
     public void send(EmailRequestDto emailRequestDto) {
         // TODO: Implement the method body

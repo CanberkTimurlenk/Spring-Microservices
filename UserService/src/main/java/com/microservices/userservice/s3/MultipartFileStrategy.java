@@ -1,6 +1,5 @@
 package com.microservices.userservice.s3;
 
-import org.common.s3.FileStrategy;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

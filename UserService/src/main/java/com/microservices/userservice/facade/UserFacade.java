@@ -4,7 +4,7 @@ import com.microservices.userservice.dto.UserRequestDto;
 import com.microservices.userservice.s3.MultipartFileStrategy;
 import com.microservices.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.common.s3.service.StorageService;
+import org.common.sns.service.StorageService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

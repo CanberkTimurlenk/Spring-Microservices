@@ -1,0 +1,5 @@
+org/common/s3/FileStrategy.class
+org/common/s3/validation/BucketExists.class
+org/common/s3/validation/BucketExistenceValidator.class
+org/common/s3/properties/AwsS3BucketProperties.class
+org/common/s3/service/StorageService.class
